@@ -5,124 +5,407 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Menuju Halaman Unduhan</title>
   <style>
-    body {
-      font-family: 'Segoe UI', Arial, sans-serif;
-      background: #f5f5f5;
+    * {
       margin: 0;
       padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Inter', 'Segoe UI', system-ui, sans-serif;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      min-height: 100vh;
       color: #333;
+      line-height: 1.6;
     }
+
     .container {
-      max-width: 800px;
-      background: #fff;
-      margin: 40px auto;
-      padding: 25px;
-      box-shadow: 0 4px 15px rgba(0,0,0,0.1);
-      border-radius: 8px;
+      max-width: 900px;
+      background: rgba(255, 255, 255, 0.95);
+      backdrop-filter: blur(10px);
+      margin: 20px auto;
+      border-radius: 20px;
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.1);
+      overflow: hidden;
+      animation: slideUp 0.8s ease-out;
     }
+
+    @keyframes slideUp {
+      from {
+        opacity: 0;
+        transform: translateY(50px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .header {
+      background: linear-gradient(135deg, #4f46e5, #7c3aed);
+      color: white;
+      padding: 40px 30px;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .header::before {
+      content: '';
+      position: absolute;
+      top: -50%;
+      left: -50%;
+      width: 200%;
+      height: 200%;
+      background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
+      animation: rotate 20s linear infinite;
+    }
+
+    @keyframes rotate {
+      from { transform: rotate(0deg); }
+      to { transform: rotate(360deg); }
+    }
+
     h1 {
-      font-size: 28px;
-      margin-bottom: 15px;
-      color: #1976d2;
-      text-align: center;
+      font-size: 2.5rem;
+      font-weight: 700;
+      margin-bottom: 10px;
+      position: relative;
+      z-index: 1;
     }
-    p { line-height: 1.7; text-align: justify; }
+
+    .subtitle {
+      font-size: 1.1rem;
+      opacity: 0.9;
+      position: relative;
+      z-index: 1;
+    }
+
+    .content {
+      padding: 40px 30px;
+    }
+
+    .article-text {
+      font-size: 1.1rem;
+      line-height: 1.8;
+      margin-bottom: 30px;
+      text-align: justify;
+      color: #4a5568;
+    }
+
+    .highlight-box {
+      background: linear-gradient(135deg, #e0f2fe, #f3e5f5);
+      border-left: 4px solid #4f46e5;
+      padding: 20px;
+      margin: 30px 0;
+      border-radius: 12px;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+    }
+
     .ads {
-      margin: 20px 0;
+      margin: 30px 0;
       text-align: center;
-      padding: 10px;
-      border: 1px dashed #ccc;
-      background: #fafafa;
+      padding: 20px;
+      border: 2px dashed #cbd5e0;
+      background: linear-gradient(45deg, #f8fafc, #edf2f7);
+      border-radius: 12px;
+      color: #718096;
+      font-weight: 600;
     }
+
+    .countdown-section {
+      text-align: center;
+      margin: 40px 0;
+      padding: 30px;
+      background: linear-gradient(135deg, #fafafa, #f0f0f0);
+      border-radius: 20px;
+      box-shadow: inset 0 2px 10px rgba(0, 0, 0, 0.05);
+    }
+
     .countdown-circle {
       position: relative;
-      width: 120px;
-      height: 120px;
+      width: 150px;
+      height: 150px;
       margin: 30px auto;
     }
+
     .countdown-circle svg {
       transform: rotate(-90deg);
-      width: 120px;
-      height: 120px;
+      width: 150px;
+      height: 150px;
+      filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.1));
     }
+
     .countdown-circle circle {
       fill: none;
-      stroke-width: 10;
+      stroke-width: 8;
       stroke-linecap: round;
     }
-    .countdown-bg { stroke: #ddd; }
-    .countdown-progress {
-      stroke: #1976d2;
-      stroke-dasharray: 377; /* 2πr (r=60) */
-      stroke-dashoffset: 377;
-      transition: stroke-dashoffset 1s linear;
+
+    .countdown-bg { 
+      stroke: #e2e8f0; 
     }
+
+    .countdown-progress {
+      stroke: url(#gradient);
+      stroke-dasharray: 471; /* 2πr (r=75) */
+      stroke-dashoffset: 471;
+      transition: stroke-dashoffset 1s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
     .countdown-text {
       position: absolute;
       top: 50%;
       left: 50%;
       transform: translate(-50%, -50%);
-      font-size: 22px;
-      font-weight: bold;
-      color: #1976d2;
+      font-size: 2rem;
+      font-weight: 800;
+      color: #4f46e5;
+      text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
     }
+
     .btn {
       display: inline-block;
-      background: linear-gradient(to right, #1e88e5, #1565c0);
+      background: linear-gradient(135deg, #4f46e5, #7c3aed);
       color: #fff;
-      padding: 14px 30px;
+      padding: 16px 40px;
       border-radius: 50px;
       text-decoration: none;
-      font-size: 18px;
-      font-weight: bold;
+      font-size: 1.1rem;
+      font-weight: 600;
       margin-top: 20px;
-      box-shadow: 0 4px 10px rgba(0,0,0,0.2);
-      opacity: 0.6;
-      pointer-events: none;
+      box-shadow: 0 8px 25px rgba(79, 70, 229, 0.3);
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .btn::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+      transition: left 0.5s;
+    }
+
+    .btn:hover::before {
+      left: 100%;
+    }
+
+    .btn:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 12px 35px rgba(79, 70, 229, 0.4);
+    }
+
+    .btn.countdown-btn {
+      background: #94a3b8;
+      cursor: not-allowed;
+      box-shadow: 0 4px 15px rgba(148, 163, 184, 0.3);
+    }
+
+    .btn.countdown-btn:hover {
+      transform: none;
+      box-shadow: 0 4px 15px rgba(148, 163, 184, 0.3);
+    }
+
+    .btn-countdown-circle {
+      position: relative;
+      width: 60px;
+      height: 60px;
+      margin: 0 auto 20px;
+    }
+
+    .btn-countdown-circle svg {
+      transform: rotate(-90deg);
+      width: 60px;
+      height: 60px;
+    }
+
+    .btn-countdown-circle circle {
+      fill: none;
+      stroke-width: 4;
+      stroke-linecap: round;
+    }
+
+    .btn-countdown-circle .countdown-bg { 
+      stroke: rgba(255, 255, 255, 0.3); 
+    }
+
+    .btn-countdown-circle .countdown-progress {
+      stroke: #ffffff;
+      stroke-dasharray: 188; /* 2πr (r=30) */
+      stroke-dashoffset: 188;
+      transition: stroke-dashoffset 1s linear;
+    }
+
+    .btn-countdown-text {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      font-size: 1.2rem;
+      font-weight: 700;
+      color: white;
+    }
+
+    .footer-text {
+      background: #f8fafc;
+      padding: 30px;
+      margin-top: 30px;
+      border-radius: 15px;
+      color: #64748b;
+      font-size: 1rem;
+      line-height: 1.7;
+    }
+
+    .step-indicator {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      margin: 30px 0;
+      gap: 15px;
+    }
+
+    .step {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background: #e2e8f0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 600;
+      color: #64748b;
       transition: all 0.3s ease;
     }
-    .btn.active {
-      opacity: 1;
-      pointer-events: auto;
+
+    .step.active {
+      background: linear-gradient(135deg, #4f46e5, #7c3aed);
+      color: white;
+      box-shadow: 0 4px 15px rgba(79, 70, 229, 0.3);
     }
-    .btn:hover {
-      background: linear-gradient(to right, #0d47a1, #1565c0);
-      transform: translateY(-2px);
+
+    .step-line {
+      width: 30px;
+      height: 2px;
+      background: #e2e8f0;
+      transition: all 0.3s ease;
+    }
+
+    .step-line.active {
+      background: linear-gradient(135deg, #4f46e5, #7c3aed);
+    }
+
+    @media (max-width: 768px) {
+      .container {
+        margin: 10px;
+        border-radius: 15px;
+      }
+      
+      .header {
+        padding: 30px 20px;
+      }
+      
+      h1 {
+        font-size: 2rem;
+      }
+      
+      .content {
+        padding: 30px 20px;
+      }
+      
+      .countdown-circle {
+        width: 120px;
+        height: 120px;
+      }
+      
+      .countdown-circle svg {
+        width: 120px;
+        height: 120px;
+      }
     }
   </style>
 </head>
 <body>
-
   <div class="container">
-    <h1>Proses Menuju Halaman Unduhan</h1>
-    <div class="ads">[Iklan 728x90 - Atas]</div>
-
-    <p>
-      Terima kasih telah menggunakan situs kami. Untuk mendukung layanan gratis ini,
-      halaman ini berisi beberapa iklan. Silakan tunggu hingga proses selesai
-      agar Anda bisa mendapatkan link unduhan yang Anda cari.
-    </p>
-
-    <!-- Countdown animasi -->
-    <div class="countdown-circle">
-      <svg>
-        <circle class="countdown-bg" cx="60" cy="60" r="60"></circle>
-        <circle class="countdown-progress" cx="60" cy="60" r="60"></circle>
-      </svg>
-      <div class="countdown-text" id="countdown">8</div>
+    <div class="header">
+      <h1>Proses Menuju Halaman Unduhan</h1>
+      <p class="subtitle">Mohon tunggu sebentar, kami sedang mempersiapkan link unduhan Anda</p>
     </div>
 
-    <!-- Tombol Get Link -->
-    <div style="text-align:center;">
-      <a id="getLink" class="btn" href="#">Get Link</a>
+    <div class="content">
+      <div class="ads">[Iklan 728x90 - Atas]</div>
+
+      <div class="step-indicator">
+        <div class="step active">1</div>
+        <div class="step-line active"></div>
+        <div class="step active">2</div>
+        <div class="step-line" id="step-line-2"></div>
+        <div class="step" id="step-3">3</div>
+      </div>
+
+      <p class="article-text">
+        Terima kasih telah menggunakan layanan unduhan kami. Untuk menjaga kualitas dan keberlangsungan 
+        layanan gratis ini, kami menampilkan beberapa iklan yang mendukung operasional website. 
+        Proses ini memastikan bahwa link unduhan yang Anda terima aman dan terjamin kualitasnya.
+      </p>
+
+      <div class="highlight-box">
+        <strong>Informasi Penting:</strong> Silakan tunggu hingga proses verifikasi selesai. 
+        Sistem kami sedang memvalidasi permintaan unduhan Anda untuk memastikan keamanan dan kecepatan optimal.
+      </div>
+
+      <!-- Countdown animasi awal -->
+      <div class="countdown-section">
+        <h3 style="margin-bottom: 20px; color: #4a5568;">Mempersiapkan Link Unduhan</h3>
+        <div class="countdown-circle">
+          <svg>
+            <defs>
+              <linearGradient id="gradient" x1="0%" y1="0%" x2="100%" y2="0%">
+                <stop offset="0%" style="stop-color:#4f46e5;stop-opacity:1" />
+                <stop offset="100%" style="stop-color:#7c3aed;stop-opacity:1" />
+              </linearGradient>
+            </defs>
+            <circle class="countdown-bg" cx="75" cy="75" r="75"></circle>
+            <circle class="countdown-progress" cx="75" cy="75" r="75"></circle>
+          </svg>
+          <div class="countdown-text" id="countdown">8</div>
+        </div>
+        <p style="color: #64748b;">Mohon tunggu <span id="countdown-small">8</span> detik lagi...</p>
+      </div>
+
+      <!-- Tombol Get Link -->
+      <div style="text-align:center;">
+        <a id="getLink" class="btn countdown-btn" href="#">
+          <div class="btn-countdown-circle" id="btn-countdown" style="display: none;">
+            <svg>
+              <circle class="countdown-bg" cx="30" cy="30" r="30"></circle>
+              <circle class="countdown-progress" cx="30" cy="30" r="30"></circle>
+            </svg>
+            <div class="btn-countdown-text" id="btn-countdown-text">10</div>
+          </div>
+          <span id="btn-text">Get Link</span>
+        </a>
+      </div>
+
+      <div class="ads">[Iklan 300x250 - Bawah]</div>
+
+      <div class="footer-text">
+        <p>
+          <strong>Langkah Selanjutnya:</strong> Setelah menekan tombol "Go to Link", Anda akan diarahkan 
+          melalui halaman sponsor selama beberapa detik sebelum mencapai link unduhan utama. 
+          Dukungan Anda melalui kunjungan ini sangat membantu kami dalam menyediakan layanan gratis berkualitas.
+        </p>
+        <br>
+        <p>
+          Jika mengalami kendala, pastikan browser Anda mengizinkan pop-up dan JavaScript aktif. 
+          Terima kasih atas kesabaran dan dukungan Anda!
+        </p>
+      </div>
     </div>
-
-    <div class="ads">[Iklan 300x250 - Bawah]</div>
-
-    <p>
-      Setelah menekan tombol di atas, Anda akan diarahkan sebentar ke halaman sponsor
-      sebelum ke link unduhan utama. Dukungan Anda membantu situs ini tetap berjalan.
-    </p>
   </div>
 
   <script>
@@ -135,42 +418,91 @@
       try {
         originalLink = atob(hash.replace("#?o=", ""));
       } catch (e) {
-        document.body.innerHTML = "<h2>Link rusak atau tidak valid!</h2>";
+        document.body.innerHTML = "<h2 style='text-align: center; color: #ef4444; padding: 50px;'>Link rusak atau tidak valid!</h2>";
       }
     } else {
-      document.body.innerHTML = "<h2>Link tidak ditemukan!</h2>";
+      document.body.innerHTML = "<h2 style='text-align: center; color: #ef4444; padding: 50px;'>Link tidak ditemukan!</h2>";
     }
 
-    // Timer countdown (8 detik)
+    // Timer countdown pertama (8 detik)
     let seconds = 8;
     const countdownElem = document.getElementById("countdown");
+    const countdownSmall = document.getElementById("countdown-small");
     const getLinkBtn = document.getElementById("getLink");
     const progressCircle = document.querySelector(".countdown-progress");
-    const totalLength = 377; // panjang keliling lingkaran (2πr)
+    const totalLength = 471; // panjang keliling lingkaran (2πr, r=75)
 
     const timer = setInterval(() => {
       seconds--;
       countdownElem.textContent = seconds;
+      countdownSmall.textContent = seconds;
       const progress = (seconds / 8) * totalLength;
       progressCircle.style.strokeDashoffset = progress;
 
       if (seconds <= 0) {
         clearInterval(timer);
-        countdownElem.textContent = "0";
+        countdownElem.textContent = "✓";
+        countdownSmall.textContent = "0";
         progressCircle.style.strokeDashoffset = 0;
-        getLinkBtn.classList.add("active");
+        
+        // Update step indicator
+        document.getElementById("step-line-2").classList.add("active");
+        document.getElementById("step-3").classList.add("active");
+        
+        // Activate button
+        getLinkBtn.classList.remove("countdown-btn");
+        getLinkBtn.style.background = "linear-gradient(135deg, #10b981, #059669)";
+        getLinkBtn.style.boxShadow = "0 8px 25px rgba(16, 185, 129, 0.3)";
+        
+        // Update countdown section
+        document.querySelector(".countdown-section h3").textContent = "Link Siap!";
+        document.querySelector(".countdown-section p").innerHTML = "Klik tombol di bawah untuk melanjutkan";
+      }
+    }, 1000);
 
-        // Aksi tombol
-        getLinkBtn.addEventListener("click", (e) => {
-          e.preventDefault();
+    // Event listener untuk tombol
+    getLinkBtn.addEventListener("click", (e) => {
+      e.preventDefault();
+      
+      if (seconds > 0) return; // Jika masih countdown, tidak bisa diklik
+      
+      // Mulai countdown kedua pada tombol
+      let btnSeconds = 10;
+      const btnCountdownDiv = document.getElementById("btn-countdown");
+      const btnCountdownText = document.getElementById("btn-countdown-text");
+      const btnText = document.getElementById("btn-text");
+      const btnProgressCircle = document.querySelector(".btn-countdown-circle .countdown-progress");
+      const btnTotalLength = 188; // 2πr (r=30)
+      
+      // Tampilkan countdown di tombol
+      btnCountdownDiv.style.display = "block";
+      btnText.textContent = "";
+      getLinkBtn.style.background = "#94a3b8";
+      getLinkBtn.style.cursor = "not-allowed";
+      getLinkBtn.style.boxShadow = "0 4px 15px rgba(148, 163, 184, 0.3)";
+      
+      const btnTimer = setInterval(() => {
+        btnSeconds--;
+        btnCountdownText.textContent = btnSeconds;
+        const btnProgress = (btnSeconds / 10) * btnTotalLength;
+        btnProgressCircle.style.strokeDashoffset = btnProgress;
+
+        if (btnSeconds <= 0) {
+          clearInterval(btnTimer);
+          btnCountdownDiv.style.display = "none";
+          btnText.textContent = "Go to Link";
+          getLinkBtn.style.background = "linear-gradient(135deg, #ef4444, #dc2626)";
+          getLinkBtn.style.cursor = "pointer";
+          getLinkBtn.style.boxShadow = "0 8px 25px rgba(239, 68, 68, 0.3)";
+          
+          // Redirect ke link
           window.location.href = adLink;
           setTimeout(() => {
             window.location.href = originalLink;
           }, 4000);
-        });
-      }
-    }, 1000);
+        }
+      }, 1000);
+    });
   </script>
-
 </body>
 </html>
