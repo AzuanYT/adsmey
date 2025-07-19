@@ -3,116 +3,151 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Link Shortener - Safelink Generator</title>
+  <title>Shortlink Generator</title>
   <style>
     body {
-      font-family: 'Segoe UI', Arial, sans-serif;
-      background: #f5f5f5;
+      font-family: 'Segoe UI', Tahoma, sans-serif;
+      background: #f0f2f5;
       margin: 0;
       padding: 0;
       display: flex;
-      align-items: center;
       justify-content: center;
-      min-height: 100vh;
-      color: #333;
+      align-items: center;
+      height: 100vh;
     }
-    .wrapper {
+    .box {
       background: #fff;
-      padding: 30px 25px;
-      max-width: 500px;
+      padding: 30px;
+      border-radius: 10px;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+      max-width: 400px;
       width: 100%;
       text-align: center;
-      border-radius: 8px;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.15);
     }
-    h1 {
-      font-size: 24px;
+    h2 {
       color: #1976d2;
       margin-bottom: 15px;
     }
     input[type="url"] {
       width: 100%;
       padding: 12px;
-      font-size: 16px;
-      border: 1px solid #ccc;
-      border-radius: 5px;
       margin-bottom: 15px;
-      outline: none;
+      border-radius: 6px;
+      border: 1px solid #ccc;
+      font-size: 14px;
     }
     button {
-      background: #1e88e5;
+      background: linear-gradient(to right, #1e88e5, #1565c0);
       color: #fff;
-      font-size: 16px;
-      font-weight: bold;
       padding: 12px 20px;
       border: none;
-      border-radius: 5px;
+      border-radius: 6px;
       cursor: pointer;
-      transition: 0.3s;
-    }
-    button:hover {
-      background: #1565c0;
-    }
-    .result {
-      margin-top: 20px;
-      display: none;
-    }
-    .result input {
-      width: calc(100% - 110px);
-      padding: 10px;
-      font-size: 14px;
-      border: 1px solid #ccc;
-      border-radius: 5px;
-      outline: none;
-      margin-right: 10px;
-    }
-    .copy-btn {
-      background: #43a047;
-      padding: 10px 16px;
-      border-radius: 5px;
-      color: #fff;
-      cursor: pointer;
-      border: none;
       font-weight: bold;
       transition: 0.3s;
+      margin: 5px;
     }
-    .copy-btn:hover { background: #2e7d32; }
+    button:hover {
+      background: linear-gradient(to right, #0d47a1, #1565c0);
+    }
+    #result {
+      margin-top: 15px;
+      padding: 10px;
+      background: #f4f4f4;
+      border: 1px solid #ddd;
+      border-radius: 5px;
+      font-size: 14px;
+      word-break: break-all;
+    }
+    #history {
+      margin-top: 20px;
+      text-align: left;
+    }
+    .link-item {
+      margin-bottom: 10px;
+      background: #fafafa;
+      padding: 8px;
+      border: 1px solid #ddd;
+      border-radius: 5px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 13px;
+    }
+    .link-item a {
+      color: #1976d2;
+      text-decoration: none;
+      word-break: break-all;
+    }
+    .link-item button {
+      background: #e53935;
+      padding: 5px 10px;
+      font-size: 12px;
+      border: none;
+      color: white;
+      border-radius: 4px;
+      cursor: pointer;
+    }
   </style>
 </head>
 <body>
-  <div class="wrapper">
-    <h1>Safelink Generator</h1>
-    <input type="url" id="originalLink" placeholder="Tempel link asli di sini..." required>
-    <button onclick="generateLink()">Generate Shortlink</button>
-    <div class="result" id="resultBox">
-      <input type="text" id="shortLink" readonly>
-      <button class="copy-btn" onclick="copyLink()">Copy</button>
+
+  <div class="box">
+    <h2>Shortlink Generator</h2>
+    <input type="url" id="inputLink" placeholder="Tempel link asli di sini..." required>
+    <button onclick="generateLink()">Generate</button>
+    <div id="result"></div>
+    <div id="history">
+      <h3>Riwayat Shortlink</h3>
+      <div id="linkList"></div>
     </div>
   </div>
 
   <script>
-    const safelinkPage = "https://azuanyt.github.io/adsmey/safelink.html"; // Ganti dengan URL safelink lu
+    const linkListElem = document.getElementById("linkList");
+    let linkHistory = JSON.parse(localStorage.getItem("shortlinkHistory")) || [];
+
+    function renderHistory() {
+      linkListElem.innerHTML = "";
+      linkHistory.forEach((link, index) => {
+        const div = document.createElement("div");
+        div.className = "link-item";
+        div.innerHTML = `
+          <a href="${link}" target="_blank">${link}</a>
+          <button onclick="deleteLink(${index})">Hapus</button>
+        `;
+        linkListElem.appendChild(div);
+      });
+    }
 
     function generateLink() {
-      const input = document.getElementById("originalLink").value.trim();
-      if (!input) return alert("Masukkan link dulu!");
+      const original = document.getElementById("inputLink").value.trim();
+      if (!original) {
+        alert("Masukkan link valid!");
+        return;
+      }
+      const encoded = btoa(original);
+      const shortUrl = window.location.origin + "/safelink1.html#?o=" + encoded;
 
-      // Encode link ke Base64
-      const encoded = btoa(input);
-      const shortURL = `${safelinkPage}#?o=${encoded}`;
+      document.getElementById("result").innerHTML = `
+        Shortlink: <br>
+        <a href="${shortUrl}" target="_blank">${shortUrl}</a>
+      `;
 
-      // Tampilkan hasil
-      document.getElementById("shortLink").value = shortURL;
-      document.getElementById("resultBox").style.display = "block";
+      // Simpan ke history
+      linkHistory.push(shortUrl);
+      localStorage.setItem("shortlinkHistory", JSON.stringify(linkHistory));
+      renderHistory();
     }
 
-    function copyLink() {
-      const shortLink = document.getElementById("shortLink");
-      shortLink.select();
-      shortLink.setSelectionRange(0, 99999);
-      document.execCommand("copy");
-      alert("Link berhasil dicopy!");
+    function deleteLink(index) {
+      linkHistory.splice(index, 1);
+      localStorage.setItem("shortlinkHistory", JSON.stringify(linkHistory));
+      renderHistory();
     }
+
+    renderHistory();
   </script>
+
 </body>
 </html>
