@@ -84,13 +84,7 @@
     }
     /* Section Iklan */
     .ads-section {
-      margin: 30px 0;
-      padding: 15px;
-      background: #f9f9f9;
       
-      border: 1px dashed #ccc;
-      border-radius: 8px;
-      color: #888;
     }
   </style>
 </head>
@@ -286,20 +280,16 @@
   const progressText = document.getElementById("progressText");
   const scrollBtn = document.getElementById("scrollBtn");
   const getLinkBtn = document.getElementById("getLinkBtn");
-  const hash = window.location.hash;
 
-  const adLink = "https://direct-link-ads.com"; // Ganti dengan link iklan
-  const safelink2 = "safelink2.html"; // Halaman safelink2 target
-  
+  const hash = window.location.hash;
   let totalTime = 10;
   let elapsed = 0;
 
-  // Tampilkan tombol "Open" hanya kalau hash ada (hasil generate)
+  // Tampilkan tombol Open hanya jika hash ada
   if (hash.startsWith("#?o=")) {
     startBtn.style.display = "block";
   }
 
-  // Saat klik tombol "Open", mulai countdown
   startBtn.addEventListener("click", () => {
     startBtn.style.display = "none";
     progressContainer.style.display = "block";
@@ -318,40 +308,21 @@
         clearInterval(interval);
         progressContainer.style.display = "none";
         progressText.style.display = "none";
-        scrollBtn.style.display = "block";
+        scrollBtn.style.display = "block"; // Tombol scroll baru muncul setelah countdown
       }
     }, 1000);
   }
 
-  // Saat klik tombol "Scroll ke Bawah", scroll ke #download
+  // Scroll ke bawah saat tombol ditekan
   scrollBtn.addEventListener("click", () => {
     document.getElementById("download").scrollIntoView({ behavior: "smooth" });
     scrollBtn.style.display = "none";
     getLinkBtn.style.display = "block";
   });
 
-  // Saat klik "Get Link" → buka iklan dulu
-  getLinkBtn.addEventListener("click", (e) => {
-    e.preventDefault();
-
-    // Simpan tujuan safelink2 agar bisa dibawa balik
-    const target = safelink2 + hash;
-    sessionStorage.setItem("redirectAfterAd", target);
-
-    // Ganti history agar tombol Back langsung ke safelink2
-    history.replaceState(null, null, target);
-
-    // Arahkan user ke iklan
-    window.location.href = adLink;
-  });
-
-  // Listener: kalau user klik tombol Back setelah iklan, otomatis ke safelink2
-  window.addEventListener("popstate", () => {
-    const target = sessionStorage.getItem("redirectAfterAd");
-    if (target) {
-      sessionStorage.removeItem("redirectAfterAd");
-      window.location.href = target;
-    }
+  // Klik Get Link -> langsung ke safelink2 dengan hash yang sama
+  getLinkBtn.addEventListener("click", () => {
+    window.location.href = "safelink2.html" + hash;
   });
 </script>
 </body>
