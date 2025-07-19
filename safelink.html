@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Menuju Halaman Unduhan</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', Arial, sans-serif;
+      background: #f5f5f5;
+      margin: 0;
+      padding: 0;
+      color: #333;
+    }
+    .container {
+      max-width: 800px;
+      background: #fff;
+      margin: 40px auto;
+      padding: 25px;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+      border-radius: 8px;
+    }
+    h1 {
+      font-size: 28px;
+      margin-bottom: 15px;
+      color: #1976d2;
+      text-align: center;
+    }
+    p { line-height: 1.7; text-align: justify; }
+    .ads {
+      margin: 20px 0;
+      text-align: center;
+      padding: 10px;
+      border: 1px dashed #ccc;
+      background: #fafafa;
+    }
+    .countdown-circle {
+      position: relative;
+      width: 120px;
+      height: 120px;
+      margin: 30px auto;
+    }
+    .countdown-circle svg {
+      transform: rotate(-90deg);
+      width: 120px;
+      height: 120px;
+    }
+    .countdown-circle circle {
+      fill: none;
+      stroke-width: 10;
+      stroke-linecap: round;
+    }
+    .countdown-bg { stroke: #ddd; }
+    .countdown-progress {
+      stroke: #1976d2;
+      stroke-dasharray: 377; /* 2πr (r=60) */
+      stroke-dashoffset: 377;
+      transition: stroke-dashoffset 1s linear;
+    }
+    .countdown-text {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      font-size: 22px;
+      font-weight: bold;
+      color: #1976d2;
+    }
+    .btn {
+      display: inline-block;
+      background: linear-gradient(to right, #1e88e5, #1565c0);
+      color: #fff;
+      padding: 14px 30px;
+      border-radius: 50px;
+      text-decoration: none;
+      font-size: 18px;
+      font-weight: bold;
+      margin-top: 20px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+      opacity: 0.6;
+      pointer-events: none;
+      transition: all 0.3s ease;
+    }
+    .btn.active {
+      opacity: 1;
+      pointer-events: auto;
+    }
+    .btn:hover {
+      background: linear-gradient(to right, #0d47a1, #1565c0);
+      transform: translateY(-2px);
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <h1>Proses Menuju Halaman Unduhan</h1>
+    <div class="ads">[Iklan 728x90 - Atas]</div>
+
+    <p>
+      Terima kasih telah menggunakan situs kami. Untuk mendukung layanan gratis ini,
+      halaman ini berisi beberapa iklan. Silakan tunggu hingga proses selesai
+      agar Anda bisa mendapatkan link unduhan yang Anda cari.
+    </p>
+
+    <!-- Countdown animasi -->
+    <div class="countdown-circle">
+      <svg>
+        <circle class="countdown-bg" cx="60" cy="60" r="60"></circle>
+        <circle class="countdown-progress" cx="60" cy="60" r="60"></circle>
+      </svg>
+      <div class="countdown-text" id="countdown">8</div>
+    </div>
+
+    <!-- Tombol Get Link -->
+    <div style="text-align:center;">
+      <a id="getLink" class="btn" href="#">Get Link</a>
+    </div>
+
+    <div class="ads">[Iklan 300x250 - Bawah]</div>
+
+    <p>
+      Setelah menekan tombol di atas, Anda akan diarahkan sebentar ke halaman sponsor
+      sebelum ke link unduhan utama. Dukungan Anda membantu situs ini tetap berjalan.
+    </p>
+  </div>
+
+  <script>
+    const adLink = "https://direct-link-adsterra.com"; // Ganti dengan link iklan
+    let originalLink = "";
+
+    // Decode hash link asli
+    const hash = window.location.hash;
+    if (hash.startsWith("#?o=")) {
+      try {
+        originalLink = atob(hash.replace("#?o=", ""));
+      } catch (e) {
+        document.body.innerHTML = "<h2>Link rusak atau tidak valid!</h2>";
+      }
+    } else {
+      document.body.innerHTML = "<h2>Link tidak ditemukan!</h2>";
+    }
+
+    // Timer countdown (8 detik)
+    let seconds = 8;
+    const countdownElem = document.getElementById("countdown");
+    const getLinkBtn = document.getElementById("getLink");
+    const progressCircle = document.querySelector(".countdown-progress");
+    const totalLength = 377; // panjang keliling lingkaran (2πr)
+
+    const timer = setInterval(() => {
+      seconds--;
+      countdownElem.textContent = seconds;
+      const progress = (seconds / 8) * totalLength;
+      progressCircle.style.strokeDashoffset = progress;
+
+      if (seconds <= 0) {
+        clearInterval(timer);
+        countdownElem.textContent = "0";
+        progressCircle.style.strokeDashoffset = 0;
+        getLinkBtn.classList.add("active");
+
+        // Aksi tombol
+        getLinkBtn.addEventListener("click", (e) => {
+          e.preventDefault();
+          window.location.href = adLink;
+          setTimeout(() => {
+            window.location.href = originalLink;
+          }, 4000);
+        });
+      }
+    }, 1000);
+  </script>
+
+</body>
+</html>
