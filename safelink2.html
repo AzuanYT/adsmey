@@ -280,69 +280,6 @@
     if (finalLink) window.location.href = finalLink;
   });
 </script>
-<script src="https://azuanyt.github.io/adsmey/hai/please/dont/open/conf1g.js"></script>
-<script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
-<script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
-	<script>
-  firebase.initializeApp(window.firebaseConfig);
 
-const db = firebase.database();
-
-  // ====== DAFTAR TOMBOL (ganti ID sesuai tombol lu) ======
-  const buttonIds = ["goBtn"]; 
-
-  // Simpen klik ke database
-  function addClick(id) {
-    const ref = db.ref("clicks/" + id);
-    ref.transaction(current => (current || 0) + 1);
-  }
-
-  // Ambil semua klik dari database
-  function getClicks(callback) {
-    const result = {};
-    let done = 0;
-    buttonIds.forEach(id => {
-      db.ref("clicks/" + id).once("value", snap => {
-        result[id] = snap.val() || 0;
-        done++;
-        if (done === buttonIds.length) callback(result);
-      });
-    });
-  }
-
-  // Event klik untuk semua tombol
-  buttonIds.forEach(id => {
-    const btn = document.getElementById(id);
-    if (btn) {
-      btn.addEventListener("click", () => addClick(id));
-    }
-  });
-
-  // Mode admin (lihat jumlah klik semua tombol)
-  if (window.location.search.includes("admin=true")) {
-    const box = document.createElement("div");
-    box.style.position = "fixed";
-    box.style.bottom = "10px";
-    box.style.right = "10px";
-    box.style.background = "rgba(0,0,0,0.8)";
-    box.style.color = "#fff";
-    box.style.padding = "10px";
-    box.style.fontSize = "14px";
-    box.style.borderRadius = "8px";
-    box.style.zIndex = "9999";
-    box.style.cursor = "pointer";
-    box.innerText = "Loading klik...";
-    document.body.appendChild(box);
-
-    function refresh() {
-      getClicks(data => {
-        box.innerHTML = buttonIds.map(id => `Klik ${id}: ${data[id]}`).join("<br>") + "<br>(Klik untuk refresh)";
-      });
-    }
-
-    box.addEventListener("click", refresh);
-    refresh();
-  }
-</script>
 </body>
 </html>
