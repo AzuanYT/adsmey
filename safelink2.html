@@ -280,23 +280,13 @@
     if (finalLink) window.location.href = finalLink;
   });
 </script>
-<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
-<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
-<script>
-  // ====== CONFIG FIREBASE ======
-  const firebaseConfig = {
-    apiKey: "",
-    authDomain: "",
-    databaseURL: "",
-    projectId: "",
-    storageBucket: "",
-    messagingSenderId: "",
-    appId: "1:::",
-    measurementId: "G-"
-  };
+<script src="https://adsmeyy.blogspot.com/p/config.html"></script>
+<script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
+	<script>
+  firebase.initializeApp(window.firebaseConfig);
 
-  firebase.initializeApp(firebaseConfig);
-  const db = firebase.database();
+const db = firebase.database();
 
   // ====== DAFTAR TOMBOL (ganti ID sesuai tombol lu) ======
   const buttonIds = ["goBtn"]; 
