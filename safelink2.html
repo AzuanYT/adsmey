@@ -159,19 +159,24 @@
 <body>
 		<br><br><br><br><br><br>
 
-  <div class="wrapper">
-    <div class="card">
-      <div class="logo">
-        <i class="fas fa-link"></i> Adsmey
-      </div>
-      <h2>You will be redirected to the Destination URL</h2>
-      <p>
-        Press the <b>OPEN LINK</b> button to continue and open your original destination URL.
-      </p>
-      <a href="#" class="btn" id="goBtn">
-        <i class="fas fa-external-link-alt"></i> OPEN LINK
-      </a>
+
+<div class="wrapper">
+  <div class="card">
+    <div class="logo">
+      <i class="fas fa-link"></i> Adsmey
     </div>
+    <h2>You will be redirected to the Destination URL</h2>
+    <p>
+      Press the <b>OPEN LINK</b> button to continue and open your original destination URL.
+    </p>
+    <a href="#" class="btn" id="goBtn">
+      <i class="fas fa-external-link-alt"></i> OPEN LINK
+    </a>
+    <p id="helpText" style="margin-top:15px; display:none; color:#1565c0; font-weight:bold; cursor:pointer;">
+      Belum ke-redirect? <u>Klik di sini</u> untuk mencoba lagi.
+    </p>
+  </div>
+</div>
 
     <div class="download-item">
       <div>Terima kasih sudah melewati berbagai rintangan yang sulit untuk mencapai link akhir.</div>
@@ -218,27 +223,63 @@
 <script type="text/javascript" src="//www.highperformanceformat.com/acfeb08f57d023bf20bd1d69916f41dd/invoke.js"></script></div>
   
 
-  <script>
-    let finalLink = "";
-    const hash = window.location.hash;
 
-    if (hash.startsWith("#?o=")) {
-      try {
-        finalLink = atob(hash.replace("#?o=", ""));
-      } catch (e) {
-        alert("Link tidak valid!");
-      }
+<script>
+  let finalLink = "";
+  const hash = window.location.hash;
+
+  if (hash.startsWith("#?o=")) {
+    try {
+      finalLink = atob(hash.replace("#?o=", ""));
+    } catch (e) {
+      alert("Link tidak valid!");
+    }
+  }
+
+  const goBtn = document.getElementById("goBtn");
+  const helpText = document.getElementById("helpText");
+
+  function startRedirectAnimation() {
+    // Ganti text jadi "Redirect..."
+    goBtn.textContent = "Redirect";
+    goBtn.style.pointerEvents = "none";
+    goBtn.style.opacity = "0.6";
+
+    // Tambahkan animasi titik (looping)
+    let dots = 0;
+    setInterval(() => {
+      dots = (dots + 1) % 4;
+      goBtn.textContent = "Redirect" + ".".repeat(dots);
+    }, 500);
+  }
+
+  goBtn.addEventListener("click", function(e) {
+    e.preventDefault();
+    if (!finalLink) {
+      alert("Link tujuan tidak ditemukan!");
+      return;
     }
 
-    document.getElementById("goBtn").addEventListener("click", function(e) {
-      e.preventDefault();
-      if (finalLink) {
-        window.location.href = finalLink;
-      } else {
-        alert("Link tujuan tidak ditemukan!");
-      }
-    });
-  </script>
+    // Mulai animasi dan langsung redirect
+    startRedirectAnimation();
+
+    try {
+      window.location.href = finalLink; // langsung redirect
+    } catch (err) {
+      helpText.style.display = "block";
+    }
+
+    // Kalau gagal (server lag/back), tampilkan teks bantuan setelah 3 detik
+    setTimeout(() => {
+      helpText.style.display = "block";
+    }, 3000);
+  });
+
+  // Klik teks bantuan untuk redirect manual
+  helpText.addEventListener("click", () => {
+    if (finalLink) window.location.href = finalLink;
+  });
+</script>
 
 </body>
 </html>
