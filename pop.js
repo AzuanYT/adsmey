@@ -162,15 +162,17 @@ imgWrap.appendChild(linkWrap);
 function actionCancelWithURL() {
   removeModalIfAny();
   try {
-    const a = document.createElement("a");
-    a.href = redirectUrl; // pakai URL yang sama kayak gambar
-    a.target = "_blank";
-    a.rel = "noopener noreferrer";
-    document.body.appendChild(a);
-    a.click();
-    a.remove();
-  } catch (err) {
-    window.open(redirectUrl, "_blank", "noopener");
+        const a = document.createElement("a");
+        a.href = redirectUrl;
+        a.style.display = "none";
+        document.body.appendChild(a);
+        setTimeout(() => {
+          try { a.click(); }
+          catch (e) { window.open(redirectUrl, "_blank", "noopener"); }
+          setTimeout(() => a.remove(), 1200);
+        }, DOWNLOAD_DELAY_MS);
+      } catch (err) {
+        setTimeout(() => window.open(redirectUrl, "_blank", "noopener"), DOWNLOAD_DELAY_MS);
   }
 }
     function actionNextWithDownload() {
