@@ -2,7 +2,7 @@
   // === CONFIG (ganti sesuai kebutuhan) ===
   const redirectUrl = "#";
   const downloadUrl = "mailto:azuanpribadi@gmail.com?subject=Ad%20Placement&body=Hello%2C%20I%20am%20interested%20in%20advertising%20on%20your%20website.";
-  const imageUrl = "ads.png";
+  const imageUrl = "https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEicYADve-sbUkhFv01gQUzn5hWc1EatCdp_y81avJlOHRnRTqyNLQNTf6ajewiP55baB-_sXH5slmIbb0rnMQU6KiaT9V2-X2XRwlu0Tbj3JySopymB4VNZnCPLS24Dv_SQDQHfoqyWE0h5u-9vWKoYU3sfqcjvvMAoDgGuuNZL2MkPDad6PL38NFMpqAs/s1600/ads.png";
   const SHOW_AFTER_MS = 6000; // muncul sekali setelah 8 detik
   const DOWNLOAD_DELAY_MS = 200; // delay kecil sebelum "click" link
 
