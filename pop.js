@@ -103,12 +103,19 @@
     closeBtn.className = "smj-close";
     closeBtn.setAttribute("aria-label", "Close advertisement");
     closeBtn.innerHTML = "&times;";
+    
+const linkWrap = document.createElement("a");
+linkWrap.href = redirectUrl;
+linkWrap.target = "_blank";
+linkWrap.rel = "noopener noreferrer";
 
-    const img = document.createElement("img");
-    img.className = "smj-img";
-    img.src = imageUrl;
-    img.alt = "Promotional image — click to open";
-    img.addEventListener("error", () => { img.style.display = "none"; });
+const img = document.createElement("img");
+img.className = "smj-img";
+img.src = imageUrl;
+img.alt = "Promotional image — click to open";
+
+linkWrap.appendChild(img);
+imgWrap.appendChild(linkWrap);
 
     const overlayBtns = document.createElement("div");
     overlayBtns.className = "smj-imgbtns";
