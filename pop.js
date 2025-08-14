@@ -147,7 +147,8 @@
 
     function actionRedirect() {
       removeModalIfAny();
-      window.open(redirectUrl, "_blank");
+      
+      window.open(redirectUrl, "_blank", "noopener"); 
     }
 
     function actionNextWithDownload() {
