@@ -145,11 +145,12 @@
       // hasShown sudah true, jadi modal tidak akan dijadwalkan lagi kecuali di-refresh
     }
 
-    function actionRedirect() {
-      removeModalIfAny();
+    
       
-      window.open(redirectUrl, "_blank", "noopener"); 
-    }
+      function actionRedirect() {
+  removeModalIfAny();
+  window.open(redirectUrl, "_blank", "noopener");
+      }   
 
     function actionNextWithDownload() {
       removeModalIfAny();
