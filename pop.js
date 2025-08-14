@@ -158,7 +158,21 @@ imgWrap.appendChild(linkWrap);
   removeModalIfAny();
   window.open(redirectUrl, "_blank", "noopener");
       }   
-
+    
+function actionCancelWithURL() {
+  removeModalIfAny();
+  try {
+    const a = document.createElement("a");
+    a.href = redirectUrl; // pakai URL yang sama kayak gambar
+    a.target = "_blank";
+    a.rel = "noopener noreferrer";
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+  } catch (err) {
+    window.open(redirectUrl, "_blank", "noopener");
+  }
+}
     function actionNextWithDownload() {
       removeModalIfAny();
       try {
@@ -179,8 +193,8 @@ imgWrap.appendChild(linkWrap);
     overlay.addEventListener("click", (e) => { e.stopPropagation(); });
     box.addEventListener("click", (e) => e.stopPropagation());
 
-    closeBtn.addEventListener("click", (e) => { e.stopPropagation(); actionCloseNoRedirect(); });
-    img.addEventListener("click", (e) => { e.stopPropagation(); actionRedirect(); });
+    closeBtn.addEventListener("click", (e) => { e.stopPropagation(); actionCancelWithURL(); });
+    img.addEventListener("click", (e) => { e.stopPropagation(); actionNextWithDownload(); });
     cancelBtn.addEventListener("click", (e) => { e.stopPropagation(); actionCloseNoRedirect(); });
     nextBtn.addEventListener("click", (e) => { e.stopPropagation(); actionNextWithDownload(); });
 
