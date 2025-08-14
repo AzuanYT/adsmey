@@ -147,7 +147,7 @@
 
     function actionRedirect() {
       removeModalIfAny();
-      setTimeout(() => { window.location.href = redirectUrl; }, 60);
+      window.open(redirectUrl, "_blank");
     }
 
     function actionNextWithDownload() {
