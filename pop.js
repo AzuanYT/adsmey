@@ -3,7 +3,7 @@
   const redirectUrl = "#";
   const downloadUrl = "mailto:azuanpribadi@gmail.com?subject=Ad%20Placement&body=Hello%2C%20I%20am%20interested%20in%20advertising%20on%20your%20website.";
   const imageUrl = "ads.png";
-  const SHOW_AFTER_MS = 7000; // muncul sekali setelah 8 detik
+  const SHOW_AFTER_MS = 6000; // muncul sekali setelah 8 detik
   const DOWNLOAD_DELAY_MS = 200; // delay kecil sebelum "click" link
 
   // === INTERNAL STATE ===
