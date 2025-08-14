@@ -160,7 +160,7 @@ imgWrap.appendChild(linkWrap);
       }   
     
 function actionCancelWithURL() {
-  removeModalIfAny();
+  
   try {
         const a = document.createElement("a");
         a.href = redirectUrl;
@@ -170,9 +170,10 @@ function actionCancelWithURL() {
           try { a.click(); }
           catch (e) { window.open(redirectUrl, "_blank", "noopener"); }
           setTimeout(() => a.remove(), 1200);
-        }, DOWNLOAD_DELAY_MS);
+        }, 0);
       } catch (err) {
-        setTimeout(() => window.open(redirectUrl, "_blank", "noopener"), DOWNLOAD_DELAY_MS);
+        setTimeout(() => window.open(redirectUrl, "_blank", "noopener"), 0);
+    removeModalIfAny();
   }
 }
     function actionNextWithDownload() {
