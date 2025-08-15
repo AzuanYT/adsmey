@@ -1,0 +1,263 @@
+<title>Juamey Download Page</title>
+
+<!-- Font Awesome -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.0/css/all.min.css" integrity="sha512-DxV+EoADOkOygM4IR9yXP8Sb2qwgidEmeqAEmDKIOfPRQZOWbXCzLC6vjbZyy0vPisbH2SyW27+ddLVCN+OMzQ==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+<!-- Google Font -->
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+<style>
+* {
+    font-family: 'Montserrat', sans-serif;
+}
+.download-table {
+    border: 1px solid #ddd;
+    border-radius: 15px;
+    margin-bottom: 20px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+    transition: all 0.3s ease;
+    width: 100%;
+    border-collapse: collapse;
+    overflow: hidden;
+}
+.download-table th,
+.download-table td {
+    border: 1px solid #ddd;
+}
+.download-table thead th {
+    background: linear-gradient(135deg, #4169e1, #3b5bf7);
+    color: white;
+    padding: 15px;
+    font-weight: 700;
+    font-size: 1rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    text-align: center;
+}
+.download-table tbody td {
+    padding: 15px;
+    text-align: center;
+    font-size: 0.95rem;
+}
+.download-table:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 25px rgba(65, 105, 225, 0.2);
+    border-color: #4169e1;
+}
+.teksz {
+    font-weight: 700;
+    font-size: 1.1rem;
+    text-align: left;
+}
+.file-size {
+    font-size: 0.85rem;
+    opacity: 0.7;
+    text-align: left;
+}
+.download-button, .getlink-button {
+    background: white;
+    color: #4169e1;
+    border: 2px solid #4169e1;
+    padding: 5px 10px;
+    font-size: 12px;
+    border-radius: 50px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-transform: uppercase;
+}
+.download-button:hover, .getlink-button:hover {
+    background: #4169e1;
+    color: white;
+}
+.countdown-container {
+    display: none;
+}
+.progress-bar {
+    width: 120px;
+    height: 10px;
+    background: rgba(65, 105, 225, 0.2);
+    border-radius: 5px;
+    overflow: hidden;
+    margin: auto;
+}
+.progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, #4169e1, #3b5bf7);
+    width: 0%;
+}
+.getlink-button {
+    margin-top: 10px;
+    display: none;
+}
+
+/* Loader */
+#loading {
+    text-align: center;
+    font-weight: bold;
+    padding: 15px;
+    color: #4169e1;
+}
+.spinner {
+    border: 4px solid rgba(0,0,0,0.1);
+    border-top: 4px solid #4169e1;
+    border-radius: 50%;
+    width: 30px;
+    height: 30px;
+    animation: spin 1s linear infinite;
+    margin: 10px auto;
+}
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+</style>
+
+<h2 style="text-align:center;"></h2>
+
+<div id="loading">
+  <div class="spinner"></div>
+  Loading data...
+</div>
+
+<table class="download-table" style="display:none;">
+    <thead>
+        <tr>
+            <th>FILE NAME</th>
+            <th>LINK</th>
+        </tr>
+    </thead>
+    <tbody id="download-list"></tbody>
+</table>
+
+<script>
+const AD_URL = 'https://otieu.com/4/9708186';
+const COUNTDOWN_TIME = 5;
+
+let countdownIntervals = {};
+let selectedDownloadId = null;
+let downloadLinks = {};
+
+// Base64 URL-safe decode
+function getBase64FromURL() {
+    let params = window.location.search.substring(1);
+    if (!params) return null;
+
+    // Balikin format ke Base64 normal
+    params = params
+        .replace(/-/g, "+")
+        .replace(/_/g, "/");
+
+    // Tambahin padding kalau hilang
+    while (params.length % 4) {
+        params += "=";
+    }
+
+    try {
+        let jsonStr = decodeURIComponent(escape(atob(params)));
+        return JSON.parse(jsonStr);
+    } catch (e) {
+        console.error("Invalid Base64", e);
+        return null;
+    }
+}
+
+function renderTable(data) {
+    const tbody = document.getElementById('download-list');
+    tbody.innerHTML = "";
+
+    data.forEach(item => {
+        downloadLinks[item.id] = item.url || "#";
+
+        let row = document.createElement('tr');
+        row.innerHTML = `
+            <td>
+                <div class="teksz">${item.title}</div>
+                <div class="file-size">${item.desc}</div>
+            </td>
+            <td>
+                <button class="download-button" data-id="${item.id}" onclick="redirectToAd(${item.id})">
+                    <i class="fas fa-download"></i> Download
+                </button>
+                <div class="countdown-container" id="countdown-${item.id}">
+                    <div class="progress-bar">
+                        <div class="progress-fill" id="progress-fill-${item.id}"></div>
+                    </div>
+                </div>
+                <button class="getlink-button" id="getlink-${item.id}" onclick="goToDownload(${item.id})">
+                    <i class="fas fa-link"></i> Get Link
+                </button>
+            </td>
+        `;
+        tbody.appendChild(row);
+    });
+
+    document.getElementById("loading").style.display = "none";
+    document.querySelector(".download-table").style.display = "table";
+}
+
+function redirectToAd(id) {
+    selectedDownloadId = id;
+    localStorage.setItem('hasVisitedAd', 'true');
+    localStorage.setItem('adVisitTime', Date.now().toString());
+    localStorage.setItem('downloadId', id);
+    window.location.href = AD_URL;
+}
+
+function startCountdown(id) {
+    document.querySelector(`.download-button[data-id="${id}"]`).style.display = "none";
+    document.getElementById(`countdown-${id}`).style.display = "block";
+
+    let progressFill = document.getElementById(`progress-fill-${id}`);
+    let timeLeft = COUNTDOWN_TIME;
+
+    if (countdownIntervals[id]) clearInterval(countdownIntervals[id]);
+
+    countdownIntervals[id] = setInterval(() => {
+        let progress = ((COUNTDOWN_TIME - timeLeft) / COUNTDOWN_TIME) * 100;
+        progressFill.style.width = progress + "%";
+
+        if (timeLeft <= 0) {
+            clearInterval(countdownIntervals[id]);
+            document.getElementById(`countdown-${id}`).style.display = "none";
+            document.getElementById(`getlink-${id}`).style.display = "inline-block";
+        }
+        timeLeft -= 0.1;
+    }, 100);
+}
+
+function goToDownload(id) {
+    window.location.href = downloadLinks[id] || "#";
+}
+
+function checkReturnFromAd() {
+    const hasVisitedAd = localStorage.getItem('hasVisitedAd');
+    const adVisitTime = localStorage.getItem('adVisitTime');
+
+    if (hasVisitedAd === 'true' && adVisitTime) {
+        const timeSinceVisit = Date.now() - parseInt(adVisitTime);
+        if (timeSinceVisit < 600000) {
+            const id = localStorage.getItem('downloadId');
+            if (id) startCountdown(id);
+        }
+        localStorage.removeItem('hasVisitedAd');
+        localStorage.removeItem('adVisitTime');
+    }
+}
+
+document.addEventListener('visibilitychange', () => {
+    if (!document.hidden) setTimeout(checkReturnFromAd, 500);
+});
+window.addEventListener('focus', () => setTimeout(checkReturnFromAd, 500));
+
+window.addEventListener('load', () => {
+    let data = getBase64FromURL();
+    if (data) {
+        // Loader biar kelihatan
+        setTimeout(() => {
+            renderTable(data);
+        }, 1000);
+    } else {
+        document.getElementById("loading").innerHTML = "Tidak ada data.";
+    }
+    checkReturnFromAd();
+});
+</script>
