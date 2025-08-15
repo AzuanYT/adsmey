@@ -31,7 +31,7 @@
   // load rating dari file lokal
   async function loadRating(){
     try{
-      const res = await fetch('/ratings.json');
+      const res = await fetch('ratings.json');
       if(!res.ok) throw new Error('File JSON tidak ditemukan');
       const data = await res.json();
       let avg = 0;
@@ -81,4 +81,5 @@
 
   await loadRating();
 })();
+
 </script>
