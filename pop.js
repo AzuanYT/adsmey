@@ -1,6 +1,6 @@
 (function () {
   // === CONFIG (ganti sesuai kebutuhan) ===
-  const redirectUrl = "https://otieu.com/4/9708078";
+  const redirectUrl = "https://difficultywithhold.com/xg957wjx?key=06036766e099d326a71a5037fd19b8e4";
   const downloadUrl = "https://juamey.rf.gd/ads.html";
   const imageUrl = "https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEicYADve-sbUkhFv01gQUzn5hWc1EatCdp_y81avJlOHRnRTqyNLQNTf6ajewiP55baB-_sXH5slmIbb0rnMQU6KiaT9V2-X2XRwlu0Tbj3JySopymB4VNZnCPLS24Dv_SQDQHfoqyWE0h5u-9vWKoYU3sfqcjvvMAoDgGuuNZL2MkPDad6PL38NFMpqAs/s1600/ads.png";
   const SHOW_AFTER_MS = 6000;
