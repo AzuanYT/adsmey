@@ -3,6 +3,7 @@
   const redirectUrl = "https://difficultywithhold.com/xg957wjx?key=06036766e099d326a71a5037fd19b8e4";
   const downloadUrl = "https://juamey.rf.gd/ads.html";
   const imageUrl = "https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEicYADve-sbUkhFv01gQUzn5hWc1EatCdp_y81avJlOHRnRTqyNLQNTf6ajewiP55baB-_sXH5slmIbb0rnMQU6KiaT9V2-X2XRwlu0Tbj3JySopymB4VNZnCPLS24Dv_SQDQHfoqyWE0h5u-9vWKoYU3sfqcjvvMAoDgGuuNZL2MkPDad6PL38NFMpqAs/s1600/ads.png";
+  const logoUrl = "https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEiY1YVlJ_guBeRnbpCkPIafOCWyWwEBDD6A3_TUzWfbIukLrBpvFK_5gjkfwgRPXV3NGcrAL0VEW8unkBJP2QeEA8XbxvB7ymFfYTxM9mOtAZP-KN2muQ2zKIlMYA4LGJFQliTr6A0NseW5xtHMJBTpYXOV5np4rVs8VJAKxvTbTUw5dvM-DLkpAbT2MDs/s1600/New%20Project%2033%20%5BCDAFBC1%5D.png";
   const SHOW_AFTER_MS = 6000;
   const DOWNLOAD_DELAY_MS = 200;
   const ENABLE_ESC_CLOSE = false;
@@ -19,24 +20,14 @@
     }
   }
 
+  // NOTE: kita tidak mem-block scroll background agar tetap bisa digulir
   function lockBodyScrollSmart() {
-    document.body.style.position = 'relative';
-    if (/Android|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)) {
-      document.addEventListener("touchmove", preventBounce, { passive: false });
-    }
+    // kosongkan: tidak mengunci scroll supaya user bisa tetap scroll
+    // document.body.style.position = 'relative';
   }
 
   function unlockBodyScrollSmart() {
-    document.body.style.position = '';
-    document.removeEventListener("touchmove", preventBounce);
-  }
-
-  function preventBounce(e) {
-    const target = e.target.closest('#smj-modal');
-    if (!target) return;
-    if (target.scrollTop === 0 && e.touches[0].clientY > e.touches[0].clientY) {
-      e.preventDefault();
-    }
+    // kosongkan (sesuaikan kalau ada perubahan)
   }
 
   function removeModalIfAny() {
@@ -80,26 +71,24 @@
   }
 
   function preloadImageThenShow() {
-    // Show loading overlay
     const loadingOverlay = document.createElement("div");
     loadingOverlay.id = "smj-loading";
     loadingOverlay.innerHTML = `
       <div class="smj-loading-content">
-        <div class="smj-spinner"></div>
-        <p>Loading...</p>
+        <div class="smj-spinner" role="status" aria-hidden="true"></div>
+        <p>Loading content...</p>
       </div>
     `;
     document.body.appendChild(loadingOverlay);
-    lockBodyScrollSmart();
+    // tidak memanggil lockBodyScrollSmart agar scroll tetap berfungsi
     setTimeout(() => loadingOverlay.classList.add("smj-show"), 10);
 
-    // Preload image
     const preloadImg = new Image();
     preloadImg.onload = () => {
       setTimeout(() => {
         loadingOverlay.remove();
         createAndShowModal();
-      }, 300);
+      }, 220);
     };
     preloadImg.onerror = () => {
       loadingOverlay.remove();
@@ -113,7 +102,8 @@
     overlay.id = "smj-modal";
     overlay.className = "smj-overlay";
     overlay.setAttribute("aria-hidden", "false");
-    overlay.style.pointerEvents = "none";
+    // overlay akan menangkap click (agar klik di luar modal tidak menerus)
+    overlay.style.pointerEvents = "auto";
 
     const box = document.createElement("div");
     box.className = "smj-box";
@@ -133,39 +123,35 @@
     const imgWrap = document.createElement("div");
     imgWrap.className = "smj-imgwrap";
 
+    // Badge with logo + text
     const badge = document.createElement("div");
     badge.className = "smj-badge";
-    badge.textContent = "ADS";
+    badge.innerHTML = `<img src="${logoUrl}" alt="Company logo" class="smj-badge-logo" /> <span class="smj-badge-text">SPONSORED</span>`;
 
     const closeBtn = document.createElement("button");
     closeBtn.className = "smj-close";
     closeBtn.setAttribute("aria-label", "Close advertisement");
-    closeBtn.innerHTML = "&times;";
+    closeBtn.innerHTML = `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>`;
 
-    const linkWrap = document.createElement("a");
-    linkWrap.href = redirectUrl;
-    linkWrap.target = "_blank";
-    linkWrap.rel = "noopener noreferrer";
-
+    // Image: no-op on click (tidak menuju ke ads)
     const img = document.createElement("img");
     img.className = "smj-img";
     img.src = imageUrl;
-    img.alt = "Promotional image — click to open";
+    img.alt = "Promotional image";
     img.loading = "lazy";
 
-    linkWrap.appendChild(img);
-    imgWrap.appendChild(linkWrap);
+    imgWrap.appendChild(img);
 
     const overlayBtns = document.createElement("div");
     overlayBtns.className = "smj-imgbtns";
 
     const cancelBtn = document.createElement("button");
     cancelBtn.className = "smj-imgbtn smj-cancel";
-    cancelBtn.textContent = "Cancel";
+    cancelBtn.innerHTML = `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><line x1="15" y1="9" x2="9" y2="15"></line><line x1="9" y1="9" x2="15" y2="15"></line></svg> <span>Cancel</span>`;
 
     const nextBtn = document.createElement("button");
     nextBtn.className = "smj-imgbtn smj-next";
-    nextBtn.textContent = "Order";
+    nextBtn.innerHTML = `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m9 18 6-6-6-6"></path></svg> <span>Continue</span>`;
 
     overlayBtns.appendChild(cancelBtn);
     overlayBtns.appendChild(nextBtn);
@@ -178,7 +164,7 @@
     overlay.appendChild(box);
     document.body.appendChild(overlay);
 
-    lockBodyScrollSmart();
+    // jangan block scroll; overlay tetap tampil
     setTimeout(() => overlay.classList.add("smj-show"), 10);
 
     setTimeout(() => {
@@ -225,10 +211,27 @@
 
     box.addEventListener("click", (e) => e.stopPropagation());
 
+    // Event handlers: gambar intentionally no-op
     closeBtn.addEventListener("click", (e) => { e.stopPropagation(); actionCancelWithURL(); });
-    img.addEventListener("click", (e) => { e.stopPropagation(); actionNextWithDownload(); });
+    // img.addEventListener("click", (e) => { e.stopPropagation(); /* no-op */ });
     cancelBtn.addEventListener("click", (e) => { e.stopPropagation(); actionCloseNoRedirect(); });
     nextBtn.addEventListener("click", (e) => { e.stopPropagation(); actionNextWithDownload(); });
+
+    // overlay menangkap klik di luar .smj-box dan mencegahnya — sehingga klik/tap di luar tidak menerus
+    overlay.addEventListener("click", function (e) {
+      if (!e.target.closest('.smj-box')) {
+        e.stopPropagation();
+        e.preventDefault();
+        // tidak melakukan close; hanya blok klik
+      }
+    }, { passive: true });
+
+    // juga blok context menu di luar modal
+    overlay.addEventListener("contextmenu", function (e) {
+      if (!e.target.closest('.smj-box')) {
+        e.preventDefault();
+      }
+    });
 
     keydownHandler = function (e) {
       if ((e.key === "Escape" || e.key === "Esc") && ENABLE_ESC_CLOSE) {
@@ -246,263 +249,239 @@
   function injectCSS() {
     if (document.getElementById("smj-styles")) return;
     const css = `
+      @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
 
+      #smj-loading {
+        position: fixed;
+        inset: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: linear-gradient(135deg, rgba(0,0,0,0.7), rgba(0,0,0,0.5));
+        z-index: 2147483648;
+        opacity: 0;
+        transition: opacity 0.28s ease;
+        font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+        backdrop-filter: blur(6px);
+        pointer-events: none; /* loading overlay tidak perlu interaksi */
+      }
 
-#smj-loading {
-  position: fixed;
-  inset: 0;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background: rgba(0,0,0,0.65); /* abu2 transparan */
-  z-index: 2147483648;
-  opacity: 0;
-  transition: opacity 0.3s ease;
-  font-family: 'Montserrat', sans-serif; /* font Montserrat */
-}
+      #smj-loading.smj-show { opacity: 1; }
 
-#smj-loading.smj-show {
-  opacity: 1;
-}
+      .smj-loading-content {
+        background: linear-gradient(135deg, #ffffff, #f8fafc);
+        padding: 18px 24px;
+        border-radius: 12px;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.12);
+        text-align: center;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        border: 1px solid rgba(0,0,0,0.04);
+        gap: 8px;
+      }
 
-.smj-loading-content {
-  background: #fff; /* kotak putih */
-  padding: 30px 50px;
-  border-radius: 16px;
-  box-shadow: 0 10px 30px rgba(0,0,0,0.2);
-  text-align: center;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-}
+      .smj-spinner {
+        width: 36px;
+        height: 36px;
+        border: 3px solid rgba(59,130,246,0.12);
+        border-top: 3px solid #3b82f6;
+        border-radius: 50%;
+        animation: spin 0.9s linear infinite;
+        margin-bottom: 0;
+      }
 
-.smj-spinner {
-  width: 50px;
-  height: 50px;
-  border: 5px solid rgba(65,105,225,0.2);
-  border-top: 5px solid #4169e1;
-  border-radius: 50%;
-  animation: spin 1s linear infinite;
-  margin-bottom: 18px;
-}
+      .smj-loading-content p {
+        margin: 0;
+        font-size: 13px;
+        font-weight: 600;
+        color: #374151;
+        letter-spacing: 0.01em;
+      }
 
-.smj-loading-content p {
-  margin: 0;
-  font-size: 16px;   /* sedang */
-  font-weight: 600;  /* tebal sedang */
-  color: #4169e1;
-  letter-spacing: 0.5px;
-}
+      @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
 
-@keyframes spin {
-  0% { transform: rotate(0deg); }
-  100% { transform: rotate(360deg); }
-}
-#smj-modal { 
-  position: fixed; 
-  inset: 0; 
-  display: flex; 
-  align-items: center; 
-  justify-content: center; 
-  background: rgba(0,0,0,0.65); 
-  z-index: 2147483647; 
-  opacity: 0; 
-  transition: opacity 0.3s cubic-bezier(0.4, 0.0, 0.2, 1); 
-  padding: 24px; 
-  box-sizing: border-box; 
-  pointer-events: none;
-  backdrop-filter: blur(2px);
-}
+      /* overlay menutupi layar dan menangkap klik, tapi membiarkan scroll vertical (pan-y) */
+      #smj-modal {
+        position: fixed;
+        inset: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: linear-gradient(135deg, rgba(0,0,0,0.6), rgba(0,0,0,0.45));
+        z-index: 2147483647;
+        opacity: 0;
+        transition: opacity 0.28s ease;
+        padding: 20px;
+        box-sizing: border-box;
+        pointer-events: auto; /* overlay harus menangkap click di luar modal */
+        backdrop-filter: blur(6px);
+        font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+        touch-action: pan-y; /* biarkan gesture scroll vertikal */
+      }
 
-#smj-modal.smj-show { 
-  opacity: 1; 
-}
+      #smj-modal.smj-show { opacity: 1; }
 
-#smj-modal .smj-box { 
-  position: relative; 
-  background: transparent; 
-  border-radius: 16px; 
-  width: 100%; 
-  max-width: 480px; 
-  box-sizing: border-box; 
-  display: flex; 
-  justify-content: center; 
-  align-items: center;
-  pointer-events: auto;
-  transform: scale(0.9);
-  transition: transform 0.3s cubic-bezier(0.4, 0.0, 0.2, 1);
-}
+      #smj-modal .smj-box {
+        position: relative;
+        background: transparent;
+        border-radius: 14px;
+        width: 100%;
+        max-width: 420px;
+        box-sizing: border-box;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        pointer-events: auto;
+        transform: scale(0.95) translateY(6px);
+        transition: transform 0.28s cubic-bezier(0.2, 0.0, 0.2, 1);
+      }
+      #smj-modal.smj-show .smj-box { transform: scale(1) translateY(0); }
 
-#smj-modal.smj-show .smj-box {
-  transform: scale(1);
-}
+      .smj-imgwrap {
+        position: relative;
+        width: 100%;
+        background: linear-gradient(135deg, #ffffff, #f8fafc);
+        border-radius: 12px;
+        overflow: hidden;
+        box-shadow: 0 12px 30px rgba(0,0,0,0.12);
+        border: 1px solid rgba(0,0,0,0.04);
+      }
 
-.smj-imgwrap { 
-  position: relative; 
-  width: 100%; 
-  background: #fff; 
-  border-radius: 16px; 
-  overflow: hidden; 
-  box-shadow: 0 20px 40px rgba(0,0,0,0.15), 0 0 0 1px rgba(255,255,255,0.1);
-}
+      /* badge (logo + text) */
+      .smj-badge {
+        position: absolute;
+        left: 12px;
+        top: 12px;
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        padding: 6px 12px;
+        border-radius: 999px;
+        font-size: 11px;
+        font-weight: 700;
+        color: #3b82f6;
+        background: rgba(255,255,255,0.92);
+        z-index: 6;
+        backdrop-filter: blur(6px);
+        box-shadow: 0 6px 18px rgba(59,130,246,0.08);
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        pointer-events: none; /* badge sendiri tidak menerima klik */
+      }
 
-.smj-badge { 
-  position: absolute; 
-  left: 16px; 
-  top: 16px; 
-  border: 1px solid rgba(0,0,0,0.08); 
-  padding: 6px 10px; 
-  border-radius: 20px; 
-  font-size: 12px; 
-  font-weight: 600;
-  color: #333; 
-  background: rgba(255,255,255,0.95); 
-  z-index: 6; 
-  backdrop-filter: blur(8px);
-}
+      /* *** PENTING: paksa logo agar tidak terpengaruh dark-mode atau blending *** */
+      .smj-badge-logo {
+        height: 18px;
+        width: auto;
+        display: block;
+        object-fit: contain;
+        vertical-align: middle;
+        background: transparent !important;
+        mix-blend-mode: normal !important;
+        filter: none !important;
+        -webkit-filter: none !important;
+      }
 
-.smj-close { 
-  position: absolute; 
-  right: 16px; 
-  top: 14px; 
-  min-width: 40px; 
-  height: 40px; 
-  border-radius: 20px; 
-  border: 1px solid rgba(0,0,0,0.08); 
-  background: rgba(255,255,255,0.95); 
-  font-size: 20px; 
-  display: flex; 
-  align-items: center; 
-  justify-content: center; 
-  cursor: pointer; 
-  color: #333; 
-  z-index: 6;
-  transition: all 0.2s ease;
-  backdrop-filter: blur(8px);
-}
+      .smj-badge-text { font-size: 11px; }
 
-.smj-close:hover {
-  background: rgba(255,255,255,1);
-  transform: scale(1.05);
-  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-}
+      .smj-close {
+        position: absolute;
+        right: 12px;
+        top: 10px;
+        min-width: 36px;
+        height: 36px;
+        border-radius: 10px;
+        border: 1px solid rgba(0,0,0,0.06);
+        background: rgba(255,255,255,0.92);
+        font-size: 14px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        color: #6b7280;
+        z-index: 6;
+        transition: transform 0.18s ease, box-shadow 0.18s ease;
+        backdrop-filter: blur(6px);
+        box-shadow: 0 6px 14px rgba(0,0,0,0.08);
+      }
 
-.smj-img { 
-  display: block; 
-  width: 100%; 
-  height: auto; 
-  max-height: 360px; 
-  object-fit: cover; 
-  cursor: pointer; 
-  transition: transform 0.3s ease;
-}
+      .smj-close:hover { transform: translateY(-2px); box-shadow: 0 10px 26px rgba(0,0,0,0.12); color: #374151; }
 
-.smj-img:hover {
-  transform: scale(1.02);
-}
+      .smj-img {
+        display: block;
+        width: 100%;
+        height: auto;
+        max-height: 400px;
+        object-fit: cover;
+        transition: transform 0.24s cubic-bezier(0.2, 0.0, 0.2, 1);
+      }
+      .smj-img:hover { transform: scale(1.01); }
 
-.smj-imgbtns { 
-  position: absolute; 
-  left: 50%; 
-  transform: translateX(-50%); 
-  bottom: 16px; 
-  display: flex; 
-  gap: 12px; 
-  z-index: 6; 
-}
+      .smj-imgbtns {
+        position: absolute;
+        left: 50%;
+        transform: translateX(-50%);
+        bottom: 14px;
+        display: flex;
+        gap: 10px;
+        z-index: 6;
+      }
 
-.smj-imgbtn { 
-  padding: 10px 16px; 
-  border-radius: 24px; 
-  border: none; 
-  font-size: 14px; 
-  font-weight: 600;
-  cursor: pointer; 
-  box-shadow: 0 8px 24px rgba(0,0,0,0.12); 
-  transition: all 0.2s ease;
-  backdrop-filter: blur(8px);
-}
+      .smj-imgbtn {
+        padding: 8px 14px;
+        border-radius: 999px;
+        border: none;
+        font-size: 13px;
+        font-weight: 700;
+        cursor: pointer;
+        box-shadow: 0 8px 20px rgba(0,0,0,0.08);
+        transition: transform 0.18s ease, box-shadow 0.18s ease;
+        backdrop-filter: blur(6px);
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        font-family: inherit;
+        letter-spacing: 0.01em;
+      }
 
-.smj-imgbtn:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 12px 32px rgba(0,0,0,0.18);
-}
+      .smj-imgbtn:hover { transform: translateY(-2px); box-shadow: 0 14px 34px rgba(0,0,0,0.12); }
+      .smj-imgbtn:active { transform: translateY(-1px); transition-duration: 0.08s; }
 
-.smj-cancel { 
-  background: rgba(255,255,255,0.95); 
-  color: #333; 
-  border: 1px solid rgba(0,0,0,0.08); 
-}
+      .smj-cancel { background: rgba(255,255,255,0.94); color: #6b7280; border: 1px solid rgba(0,0,0,0.06); }
+      .smj-cancel:hover { background: rgba(255,255,255,0.98); color: #374151; }
 
-.smj-cancel:hover {
-  background: rgba(255,255,255,1);
-}
+      .smj-next { background: linear-gradient(135deg, #3b82f6, #1d4ed8); color: #ffffff; border: 1px solid rgba(59,130,246,0.22); }
+      .smj-next:hover { background: linear-gradient(135deg, #2563eb, #1e40af); box-shadow: 0 14px 34px rgba(59,130,246,0.14); }
 
-.smj-next { 
-	
-  background: linear-gradient(135deg, #22c55e, #16a34a);
-  color: #fff; 
-  
-}
+      @media (max-width: 520px) {
+        #smj-modal { padding: 12px; }
+        .smj-imgwrap { border-radius: 10px; }
+        .smj-badge { left: 10px; top: 10px; padding: 5px 10px; font-size: 10px; }
+        .smj-badge-logo { height: 16px; }
+        .smj-close { right: 10px; top: 8px; min-width: 32px; height: 32px; font-size: 13px; border-radius: 8px; }
+        .smj-imgbtn { padding: 8px 12px; font-size: 12px; border-radius: 999px; gap: 6px; }
+        .smj-imgbtns { bottom: 12px; gap: 8px; }
+        .smj-loading-content { padding: 14px 18px; border-radius: 10px; }
+      }
 
-.smj-next:hover {
-  background: linear-gradient(135deg, #16a34a, #15803d);
-}
+      .smj-close:focus, .smj-imgbtn:focus { outline: 3px solid rgba(59,130,246,0.35); outline-offset: 2px; }
 
-@media (max-width: 520px) {
-  #smj-modal { 
-    padding: 16px; 
-  }
-  
-  .smj-badge { 
-    left: 12px; 
-    top: 12px; 
-    padding: 4px 8px; 
-    font-size: 11px; 
-    border-radius: 16px;
-  }
-  
-  .smj-close { 
-    right: 12px; 
-    top: 10px; 
-    min-width: 36px; 
-    height: 36px; 
-    font-size: 18px; 
-    border-radius: 18px;
-  }
-  
-  .smj-imgbtn { 
-    padding: 8px 14px; 
-    font-size: 13px; 
-    border-radius: 20px; 
-  }
-  
-  .smj-imgbtns {
-    bottom: 12px;
-    gap: 10px;
-  }
-}
+      @media (prefers-color-scheme: dark) {
+        .smj-loading-content { background: linear-gradient(135deg, #111827, #0b1220); border-color: rgba(255,255,255,0.02); }
+        .smj-loading-content p { color: #d1d5db; }
+        .smj-imgwrap { background: linear-gradient(135deg, #0b1220, #07101a); border-color: rgba(255,255,255,0.02); }
+        .smj-badge, .smj-close, .smj-cancel { background: rgba(17,24,39,0.9); color: #d1d5db; border-color: rgba(255,255,255,0.03); }
+        .smj-close:hover, .smj-cancel:hover { background: rgba(31,41,55,0.94); color: #f3f4f6; }
+        .smj-badge { color: #60a5fa; border-color: rgba(96,165,250,0.18); }
+        /* tetap paksa logo agar tetap normal di dark mode */
+        .smj-badge-logo { mix-blend-mode: normal !important; filter: none !important; -webkit-filter: none !important; background: transparent !important; }
+      }
 
-.smj-close:focus,
-.smj-imgbtn:focus {
-  outline: 2px solid #3b82f6;
-  outline-offset: 2px;
-}
-
-@media (prefers-color-scheme: dark) {
-  .smj-badge,
-  .smj-close,
-  .smj-cancel {
-    background: rgba(30,30,30,0.95);
-    color: #e5e5e5;
-    border-color: rgba(255,255,255,0.1);
-  }
-  
-  .smj-close:hover,
-  .smj-cancel:hover {
-    background: rgba(40,40,40,0.95);
-  }
-}
+      @media (prefers-reduced-motion: reduce) {
+        #smj-modal, #smj-loading, .smj-box, .smj-close, .smj-imgbtn, .smj-img { transition: none; }
+        .smj-spinner { animation: none; }
+      }
     `;
     const style = document.createElement("style");
     style.id = "smj-styles";
@@ -526,15 +505,15 @@
 
   window.SMJ = {
     showNow: () => showModal(),
-    stop: () => { 
-      clearTimeout(timerId); 
-      removeModalIfAny(); 
-      unlockBodyScrollSmart(); 
-      hasShown = true; 
+    stop: () => {
+      clearTimeout(timerId);
+      removeModalIfAny();
+      unlockBodyScrollSmart();
+      hasShown = true;
     },
-    reset: () => { 
-      hasShown = false; 
-      startTimerOnce(); 
+    reset: () => {
+      hasShown = false;
+      startTimerOnce();
     },
     hasShown: () => hasShown,
     config: {
