@@ -1,6 +1,6 @@
 (function () {
   // === CONFIG (ganti sesuai kebutuhan) ===
-  const redirectUrl = "https://difficultywithhold.com/xg957wjx?key=06036766e099d326a71a5037fd19b8e4";
+  const redirectUrl = "https://difficultywithhold.com/h586bnnp?key=7522ac450e62fd68f15c09256ec77068";
   const downloadUrl = "https://juamey.rf.gd/ads.html";
   const imageUrl = "https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEicYADve-sbUkhFv01gQUzn5hWc1EatCdp_y81avJlOHRnRTqyNLQNTf6ajewiP55baB-_sXH5slmIbb0rnMQU6KiaT9V2-X2XRwlu0Tbj3JySopymB4VNZnCPLS24Dv_SQDQHfoqyWE0h5u-9vWKoYU3sfqcjvvMAoDgGuuNZL2MkPDad6PL38NFMpqAs/s1600/ads.png";
   const logoUrl = "https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEiY1YVlJ_guBeRnbpCkPIafOCWyWwEBDD6A3_TUzWfbIukLrBpvFK_5gjkfwgRPXV3NGcrAL0VEW8unkBJP2QeEA8XbxvB7ymFfYTxM9mOtAZP-KN2muQ2zKIlMYA4LGJFQliTr6A0NseW5xtHMJBTpYXOV5np4rVs8VJAKxvTbTUw5dvM-DLkpAbT2MDs/s1600/New%20Project%2033%20%5BCDAFBC1%5D.png";
