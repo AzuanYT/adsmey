@@ -1,7 +1,7 @@
 (function () {
   // === CONFIG (ganti sesuai kebutuhan) ===
-  const redirectUrl = "https://difficultywithhold.com/h586bnnp?key=7522ac450e62fd68f15c09256ec77068";
-  const downloadUrl = "https://discord.gg/9bHCNqCEDq"; // tetap disimpan kalau mau dipakai lagi
+  const redirectUrl = "https://discord.gg/9bHCNqCEDq";
+  const downloadUrl = "https://difficultywithhold.com/h586bnnp?key=7522ac450e62fd68f15c09256ec77068"; // tetap disimpan kalau mau dipakai lagi
   const imageUrl = "https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEiNkEskVIPPgDZBjnfQTMsDnh1RBcmmtGs-dL9zrDMADrGStZ9vN5RyJ78vYrO4_rvbbpwQba8KsFwRInkH9diY-hL9KeVFFDnxSklTzvhyh0v6zLtiGFqbcBbry3LWFYkhgeC8WOHBeAB2FAin7lPVZ45NTp7B_D7XlYgPhZvYV8GnWff3Vx4cDqrPl7o/s1600/NewProject47620E9D8-ezgif.com-video-to-webp-converter.webp";
   const logoUrl = "https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEiY1YVlJ_guBeRnbpCkPIafOCWyWwEBDD6A3_TUzWfbIukLrBpvFK_5gjkfwgRPXV3NGcrAL0VEW8unkBJP2QeEA8XbxvB7ymFfYTxM9mOtAZP-KN2muQ2zKIlMYA4LGJFQliTr6A0NseW5xtHMJBTpYXOV5np4rVs8VJAKxvTbTUw5dvM-DLkpAbT2MDs/s1600/New%20Project%2033%20%5BCDAFBC1%5D.png";
   const SHOW_AFTER_MS = 6000;
@@ -319,7 +319,7 @@
       #smj-modal.smj-show .smj-box { transform: scale(1) translateY(0); }
 
       .smj-modal-card { 
-        background: #ffffff; 
+        background: #101d38; 
         border-radius: 20px; 
         overflow: hidden; 
         box-shadow: 0 30px 70px rgba(88,101,242,0.12), 0 6px 18px rgba(0,0,0,0.25);
@@ -417,7 +417,7 @@
 
       /* Footer decorative thin line */
       .smj-footer {
-        height: 3px;
+        height: 1px;
         background: linear-gradient(90deg,#5865f2,#4752c4);
         width: 100%;
       }
