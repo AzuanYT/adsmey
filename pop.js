@@ -2,7 +2,7 @@
   // === CONFIG (ganti sesuai kebutuhan) ===
   const redirectUrl = "https://discord.gg/9bHCNqCEDq";
   const downloadUrl = "https://difficultywithhold.com/h586bnnp?key=7522ac450e62fd68f15c09256ec77068"; // tetap disimpan kalau mau dipakai lagi
-  const imageUrl = "https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEiNkEskVIPPgDZBjnfQTMsDnh1RBcmmtGs-dL9zrDMADrGStZ9vN5RyJ78vYrO4_rvbbpwQba8KsFwRInkH9diY-hL9KeVFFDnxSklTzvhyh0v6zLtiGFqbcBbry3LWFYkhgeC8WOHBeAB2FAin7lPVZ45NTp7B_D7XlYgPhZvYV8GnWff3Vx4cDqrPl7o/s1600/NewProject47620E9D8-ezgif.com-video-to-webp-converter.webp";
+  const imageUrl = "https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEhiXdj4S4S5YwEsiHbqGurOBGBI2-S6WNdlR0rihSzKbkO1eO_A0iLVJO8x5JINUWZwHwYQvZQL1wQtqdyTe1Ou757AyTUyEllY-da4ZliKXYxcZtAOQaf3w7Y1ofkKPPXTi8tYubr_TIkWSyO6_IKiVmeBqxAoEGAbHp794SfXmIEmPdT6mLed-hDtrCs/s1600/_MConverter.eu_New%20Project%2047%20%5B360A764%5D.webp";
   const logoUrl = "https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEiY1YVlJ_guBeRnbpCkPIafOCWyWwEBDD6A3_TUzWfbIukLrBpvFK_5gjkfwgRPXV3NGcrAL0VEW8unkBJP2QeEA8XbxvB7ymFfYTxM9mOtAZP-KN2muQ2zKIlMYA4LGJFQliTr6A0NseW5xtHMJBTpYXOV5np4rVs8VJAKxvTbTUw5dvM-DLkpAbT2MDs/s1600/New%20Project%2033%20%5BCDAFBC1%5D.png";
   const SHOW_AFTER_MS = 6000;
   const ENABLE_ESC_CLOSE = false;
