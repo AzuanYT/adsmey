@@ -20,7 +20,7 @@
   }
 
   function lockBodyScrollSmart() {
-    // intentionally empty: don't block scrolling
+    // intentionally empty: don't block scrolgling
   }
 
   function unlockBodyScrollSmart() {
