@@ -1,11 +1,10 @@
 (function () {
   // === CONFIG (ganti sesuai kebutuhan) ===
   const redirectUrl = "https://difficultywithhold.com/h586bnnp?key=7522ac450e62fd68f15c09256ec77068";
-  const downloadUrl = "https://juamey.rf.gd/ads.html";
-  const imageUrl = "https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEicYADve-sbUkhFv01gQUzn5hWc1EatCdp_y81avJlOHRnRTqyNLQNTf6ajewiP55baB-_sXH5slmIbb0rnMQU6KiaT9V2-X2XRwlu0Tbj3JySopymB4VNZnCPLS24Dv_SQDQHfoqyWE0h5u-9vWKoYU3sfqcjvvMAoDgGuuNZL2MkPDad6PL38NFMpqAs/s1600/ads.png";
+  const downloadUrl = "https://discord.gg/9bHCNqCEDq"; // tetap disimpan kalau mau dipakai lagi
+  const imageUrl = "https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEiNkEskVIPPgDZBjnfQTMsDnh1RBcmmtGs-dL9zrDMADrGStZ9vN5RyJ78vYrO4_rvbbpwQba8KsFwRInkH9diY-hL9KeVFFDnxSklTzvhyh0v6zLtiGFqbcBbry3LWFYkhgeC8WOHBeAB2FAin7lPVZ45NTp7B_D7XlYgPhZvYV8GnWff3Vx4cDqrPl7o/s1600/NewProject47620E9D8-ezgif.com-video-to-webp-converter.webp";
   const logoUrl = "https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEiY1YVlJ_guBeRnbpCkPIafOCWyWwEBDD6A3_TUzWfbIukLrBpvFK_5gjkfwgRPXV3NGcrAL0VEW8unkBJP2QeEA8XbxvB7ymFfYTxM9mOtAZP-KN2muQ2zKIlMYA4LGJFQliTr6A0NseW5xtHMJBTpYXOV5np4rVs8VJAKxvTbTUw5dvM-DLkpAbT2MDs/s1600/New%20Project%2033%20%5BCDAFBC1%5D.png";
   const SHOW_AFTER_MS = 6000;
-  const DOWNLOAD_DELAY_MS = 200;
   const ENABLE_ESC_CLOSE = false;
 
   let timerId = null;
@@ -20,14 +19,12 @@
     }
   }
 
-  // NOTE: kita tidak mem-block scroll background agar tetap bisa digulir
   function lockBodyScrollSmart() {
-    // kosongkan: tidak mengunci scroll supaya user bisa tetap scroll
-    // document.body.style.position = 'relative';
+    // intentionally empty: don't block scrolling
   }
 
   function unlockBodyScrollSmart() {
-    // kosongkan (sesuaikan kalau ada perubahan)
+    // intentionally empty
   }
 
   function removeModalIfAny() {
@@ -39,7 +36,7 @@
       if (prevActiveElement && typeof prevActiveElement.focus === "function") {
         try { prevActiveElement.focus(); } catch (e) { }
       }
-      setTimeout(() => old?.remove(), 300);
+      setTimeout(() => old?.remove(), 350);
     }
   }
 
@@ -75,26 +72,40 @@
     loadingOverlay.id = "smj-loading";
     loadingOverlay.innerHTML = `
       <div class="smj-loading-content">
-        <div class="smj-spinner" role="status" aria-hidden="true"></div>
-        <p>Loading content...</p>
+        <div class="smj-loading-spinner">
+          <div class="smj-loading-dot"></div>
+          <div class="smj-loading-dot"></div>
+          <div class="smj-loading-dot"></div>
+        </div>
+        <p class="smj-loading-text">Loading content...</p>
       </div>
     `;
     document.body.appendChild(loadingOverlay);
-    // tidak memanggil lockBodyScrollSmart agar scroll tetap berfungsi
-    setTimeout(() => loadingOverlay.classList.add("smj-show"), 10);
+    setTimeout(() => loadingOverlay.classList.add("smj-show"), 50);
 
     const preloadImg = new Image();
-    preloadImg.onload = () => {
-      setTimeout(() => {
-        loadingOverlay.remove();
-        createAndShowModal();
-      }, 220);
-    };
-    preloadImg.onerror = () => {
-      loadingOverlay.remove();
-      createAndShowModal();
-    };
+    const preloadLogo = new Image();
+
+    let loadedCount = 0;
+    const totalImages = 2;
+
+    function checkAllLoaded() {
+      loadedCount++;
+      if (loadedCount === totalImages) {
+        setTimeout(() => {
+          loadingOverlay.remove();
+          createAndShowModal();
+        }, 300);
+      }
+    }
+
+    preloadImg.onload = checkAllLoaded;
+    preloadImg.onerror = checkAllLoaded;
     preloadImg.src = imageUrl;
+
+    preloadLogo.onload = checkAllLoaded;
+    preloadLogo.onerror = checkAllLoaded;
+    preloadLogo.src = logoUrl;
   }
 
   function createAndShowModal() {
@@ -102,17 +113,15 @@
     overlay.id = "smj-modal";
     overlay.className = "smj-overlay";
     overlay.setAttribute("aria-hidden", "false");
-    // overlay akan menangkap click (agar klik di luar modal tidak menerus)
     overlay.style.pointerEvents = "auto";
 
     const box = document.createElement("div");
     box.className = "smj-box";
     box.setAttribute("role", "dialog");
     box.setAttribute("aria-modal", "true");
-    box.style.pointerEvents = "auto";
+
     const titleId = "smj-title-" + Date.now();
     box.setAttribute("aria-labelledby", titleId);
-
     const title = document.createElement("h2");
     title.id = titleId;
     title.textContent = "Advertisement";
@@ -120,113 +129,108 @@
     title.style.left = "-9999px";
     box.appendChild(title);
 
-    const imgWrap = document.createElement("div");
-    imgWrap.className = "smj-imgwrap";
+    const modalCard = document.createElement("div");
+    modalCard.className = "smj-modal-card";
 
-    // Badge with logo + text
-    const badge = document.createElement("div");
-    badge.className = "smj-badge";
-    badge.innerHTML = `<img src="${logoUrl}" alt="Company logo" class="smj-badge-logo" /> <span class="smj-badge-text">SPONSORED</span>`;
+    // HEADER WITH LOGO AND CLOSE BUTTON
+    const header = document.createElement("div");
+    header.className = "smj-header";
+
+    const logo = document.createElement("img");
+    logo.className = "smj-logo";
+    logo.src = logoUrl;
+    logo.alt = "Brand Logo";
+    logo.loading = "lazy";
 
     const closeBtn = document.createElement("button");
-    closeBtn.className = "smj-close";
-    closeBtn.setAttribute("aria-label", "Close advertisement");
-    closeBtn.innerHTML = `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>`;
+    closeBtn.className = "smj-close-btn";
+    closeBtn.type = "button";
+    closeBtn.setAttribute("aria-label", "Close");
+    closeBtn.innerHTML = `
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+        <path d="M18 6L6 18M6 6l12 12"/>
+      </svg>
+    `;
 
-    // Image: no-op on click (tidak menuju ke ads)
+    header.appendChild(logo);
+    header.appendChild(closeBtn);
+
+    // MAIN CONTENT IMAGE (contentArea position:relative for overlay button)
+    const contentArea = document.createElement("div");
+    contentArea.className = "smj-content";
+
     const img = document.createElement("img");
-    img.className = "smj-img";
+    img.className = "smj-main-img";
     img.src = imageUrl;
-    img.alt = "Promotional image";
+    img.alt = "Promotional content";
     img.loading = "lazy";
 
-    imgWrap.appendChild(img);
+    contentArea.appendChild(img);
 
-    const overlayBtns = document.createElement("div");
-    overlayBtns.className = "smj-imgbtns";
+    // JOIN DISCORD BUTTON - overlay inside bottom of image
+    const joinBtn = document.createElement("button");
+    joinBtn.className = "smj-join-btn";
+    joinBtn.type = "button";
+    joinBtn.setAttribute("aria-label", "Join Discord (opens in new tab)");
+    joinBtn.innerHTML = `
+      
+      
+      
+ <span class="smj-join-text">JOIN DISCORD</span>
+    `;
+    contentArea.appendChild(joinBtn);
 
-    const cancelBtn = document.createElement("button");
-    cancelBtn.className = "smj-imgbtn smj-cancel";
-    cancelBtn.innerHTML = `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><line x1="15" y1="9" x2="9" y2="15"></line><line x1="9" y1="9" x2="15" y2="15"></line></svg> <span>Cancel</span>`;
+    // FOOTER: thin decorative div (3px)
+    const footer = document.createElement("div");
+    footer.className = "smj-footer";
 
-    const nextBtn = document.createElement("button");
-    nextBtn.className = "smj-imgbtn smj-next";
-    nextBtn.innerHTML = `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m9 18 6-6-6-6"></path></svg> <span>Continue</span>`;
-
-    overlayBtns.appendChild(cancelBtn);
-    overlayBtns.appendChild(nextBtn);
-
-    imgWrap.appendChild(badge);
-    imgWrap.appendChild(closeBtn);
-    imgWrap.appendChild(overlayBtns);
-
-    box.appendChild(imgWrap);
+    // ASSEMBLE MODAL
+    modalCard.appendChild(header);
+    modalCard.appendChild(contentArea);
+    modalCard.appendChild(footer);
+    box.appendChild(modalCard);
     overlay.appendChild(box);
     document.body.appendChild(overlay);
 
-    // jangan block scroll; overlay tetap tampil
-    setTimeout(() => overlay.classList.add("smj-show"), 10);
+    // show animation
+    setTimeout(() => overlay.classList.add("smj-show"), 50);
 
+    // focus join button
     setTimeout(() => {
-      try { closeBtn.focus(); } catch (e) { }
-    }, 100);
+      try { joinBtn.focus(); } catch (e) { }
+    }, 150);
 
+    // Actions
     function actionCloseNoRedirect() {
       removeModalIfAny();
     }
 
-    function actionCancelWithURL() {
-      removeModalIfAny();
+    function actionJoinRedirect() {
+      // open in new tab and close modal
       try {
-        const a = document.createElement("a");
-        a.href = redirectUrl;
-        a.style.display = "none";
-        document.body.appendChild(a);
-        setTimeout(() => {
-          try { a.click(); }
-          catch (e) { window.open(redirectUrl, "_blank", "noopener"); }
-          setTimeout(() => a.remove(), 1200);
-        }, 0);
-      } catch (err) {
-        setTimeout(() => window.open(redirectUrl, "_blank", "noopener"), 0);
+        const win = window.open(redirectUrl, "_blank", "noopener");
+        if (!win) {
+          // popup blocked -> fallback to same tab
+          window.location.href = redirectUrl;
+        }
+      } catch (e) {
+        window.location.href = redirectUrl;
       }
+      removeModalIfAny();
     }
 
-    function actionNextWithDownload() {
-      removeModalIfAny();
-      try {
-        const a = document.createElement("a");
-        a.href = downloadUrl;
-        a.style.display = "none";
-        document.body.appendChild(a);
-        setTimeout(() => {
-          try { a.click(); }
-          catch (e) { window.open(downloadUrl, "_blank", "noopener"); }
-          setTimeout(() => a.remove(), 1200);
-        }, DOWNLOAD_DELAY_MS);
-      } catch (err) {
-        setTimeout(() => window.open(downloadUrl, "_blank", "noopener"), DOWNLOAD_DELAY_MS);
-      }
-    }
+    // button wiring
+    closeBtn.addEventListener("click", (e) => { e.stopPropagation(); actionCloseNoRedirect(); });
+    joinBtn.addEventListener("click", (e) => { e.stopPropagation(); actionJoinRedirect(); });
 
-    box.addEventListener("click", (e) => e.stopPropagation());
-
-    // Event handlers: gambar intentionally no-op
-    closeBtn.addEventListener("click", (e) => { e.stopPropagation(); actionCancelWithURL(); });
-    // img.addEventListener("click", (e) => { e.stopPropagation(); /* no-op */ });
-    cancelBtn.addEventListener("click", (e) => { e.stopPropagation(); actionCloseNoRedirect(); });
-    nextBtn.addEventListener("click", (e) => { e.stopPropagation(); actionNextWithDownload(); });
-
-    // overlay menangkap klik di luar .smj-box dan mencegahnya — sehingga klik/tap di luar tidak menerus
+    // prevent clicking outside to close (keeps user focused on modal)
     overlay.addEventListener("click", function (e) {
       if (!e.target.closest('.smj-box')) {
         e.stopPropagation();
         e.preventDefault();
-        // tidak melakukan close; hanya blok klik
       }
-    }, { passive: true });
+    }, { passive: false });
 
-    // juga blok context menu di luar modal
     overlay.addEventListener("contextmenu", function (e) {
       if (!e.target.closest('.smj-box')) {
         e.preventDefault();
@@ -251,238 +255,209 @@
     const css = `
       @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
 
+      /* Reset */
+      #smj-modal *, #smj-loading * { box-sizing: border-box; }
+
+      /* Loading Overlay */
       #smj-loading {
         position: fixed;
         inset: 0;
         display: flex;
         align-items: center;
         justify-content: center;
-        background: linear-gradient(135deg, rgba(0,0,0,0.7), rgba(0,0,0,0.5));
+        background: rgba(0, 0, 0, 0.75);
         z-index: 2147483648;
         opacity: 0;
-        transition: opacity 0.28s ease;
-        font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-        backdrop-filter: blur(6px);
-        pointer-events: none; /* loading overlay tidak perlu interaksi */
+        transition: opacity 0.3s;
+        font-family: 'Inter', system-ui, -apple-system, 'Segoe UI', sans-serif;
+        backdrop-filter: blur(8px);
+        pointer-events: none;
       }
-
       #smj-loading.smj-show { opacity: 1; }
 
       .smj-loading-content {
-        background: linear-gradient(135deg, #ffffff, #f8fafc);
-        padding: 18px 24px;
-        border-radius: 12px;
-        box-shadow: 0 10px 30px rgba(0,0,0,0.12);
+        background: #ffffff;
+        padding: 28px 40px;
+        border-radius: 16px;
+        box-shadow: 0 20px 60px rgba(0,0,0,0.3);
         text-align: center;
         display: flex;
         flex-direction: column;
         align-items: center;
-        border: 1px solid rgba(0,0,0,0.04);
-        gap: 8px;
+        gap: 16px;
       }
-
-      .smj-spinner {
-        width: 36px;
-        height: 36px;
-        border: 3px solid rgba(59,130,246,0.12);
-        border-top: 3px solid #3b82f6;
-        border-radius: 50%;
-        animation: spin 0.9s linear infinite;
-        margin-bottom: 0;
+      .smj-loading-spinner { display:flex; gap:8px; align-items:center; }
+      .smj-loading-dot {
+        width:10px; height:10px; border-radius:50%;
+        background:#5865f2; /* Discord purple */
+        animation: smj-bounce 1.4s infinite ease-in-out both;
       }
-
-      .smj-loading-content p {
-        margin: 0;
-        font-size: 13px;
-        font-weight: 600;
-        color: #374151;
-        letter-spacing: 0.01em;
+      .smj-loading-dot:nth-child(1){ animation-delay: -0.32s; }
+      .smj-loading-dot:nth-child(2){ animation-delay: -0.16s; }
+      @keyframes smj-bounce {
+        0%,80%,100%{ transform:scale(0.7); opacity:0.5; } 40%{ transform:scale(1); opacity:1; }
       }
+      .smj-loading-text { margin:0; font-size:14px; font-weight:600; color:#374151; }
 
-      @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
-
-      /* overlay menutupi layar dan menangkap klik, tapi membiarkan scroll vertical (pan-y) */
+      /* Modal Overlay */
       #smj-modal {
-        position: fixed;
-        inset: 0;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        background: linear-gradient(135deg, rgba(0,0,0,0.6), rgba(0,0,0,0.45));
-        z-index: 2147483647;
-        opacity: 0;
-        transition: opacity 0.28s ease;
-        padding: 20px;
-        box-sizing: border-box;
-        pointer-events: auto; /* overlay harus menangkap click di luar modal */
-        backdrop-filter: blur(6px);
-        font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-        touch-action: pan-y; /* biarkan gesture scroll vertikal */
+        position: fixed; inset:0;
+        display:flex; align-items:center; justify-content:center;
+        background: rgba(0,0,0,0.8);
+        z-index:2147483647; opacity:0; transition: opacity .35s;
+        padding:20px; box-sizing:border-box; pointer-events:auto; backdrop-filter: blur(12px);
+        font-family: 'Inter', system-ui, -apple-system, 'Segoe UI', sans-serif;
+        touch-action: pan-y;
       }
-
       #smj-modal.smj-show { opacity: 1; }
 
-      #smj-modal .smj-box {
-        position: relative;
-        background: transparent;
-        border-radius: 14px;
-        width: 100%;
-        max-width: 420px;
-        box-sizing: border-box;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        pointer-events: auto;
-        transform: scale(0.95) translateY(6px);
-        transition: transform 0.28s cubic-bezier(0.2, 0.0, 0.2, 1);
+      .smj-box { 
+        position:relative; width:100%; max-width:520px; 
+        transform: scale(0.94) translateY(20px);
+        transition: transform .36s cubic-bezier(0.34, 1.56, 0.64, 1);
       }
       #smj-modal.smj-show .smj-box { transform: scale(1) translateY(0); }
 
-      .smj-imgwrap {
+      .smj-modal-card { 
+        background: #ffffff; 
+        border-radius: 20px; 
+        overflow: hidden; 
+        box-shadow: 0 30px 70px rgba(88,101,242,0.12), 0 6px 18px rgba(0,0,0,0.25);
+        border: 1px solid rgba(255,255,255,0.06);
         position: relative;
-        width: 100%;
-        background: linear-gradient(135deg, #ffffff, #f8fafc);
-        border-radius: 12px;
-        overflow: hidden;
-        box-shadow: 0 12px 30px rgba(0,0,0,0.12);
-        border: 1px solid rgba(0,0,0,0.04);
       }
 
-      /* badge (logo + text) */
-      .smj-badge {
-        position: absolute;
-        left: 12px;
-        top: 12px;
-        display: inline-flex;
+      /* Header with Logo and Close */
+      .smj-header {
+        display: flex;
+        justify-content: space-between;
         align-items: center;
-        gap: 8px;
-        padding: 6px 12px;
-        border-radius: 999px;
-        font-size: 11px;
-        font-weight: 700;
-        color: #3b82f6;
-        background: rgba(255,255,255,0.92);
-        z-index: 6;
-        backdrop-filter: blur(6px);
-        box-shadow: 0 6px 18px rgba(59,130,246,0.08);
-        text-transform: uppercase;
-        letter-spacing: 0.5px;
-        pointer-events: none; /* badge sendiri tidak menerima klik */
+        padding: 16px 20px;
+        background: transparent; /* keep simple so image stands out */
       }
 
-      /* *** PENTING: paksa logo agar tidak terpengaruh dark-mode atau blending *** */
-      .smj-badge-logo {
-        height: 18px;
+      .smj-logo {
+        height: 40px;
         width: auto;
-        display: block;
         object-fit: contain;
-        vertical-align: middle;
-        background: transparent !important;
-        mix-blend-mode: normal !important;
-        filter: none !important;
-        -webkit-filter: none !important;
       }
 
-      .smj-badge-text { font-size: 11px; }
-
-      .smj-close {
-        position: absolute;
-        right: 12px;
-        top: 10px;
-        min-width: 36px;
-        height: 36px;
+      .smj-close-btn {
+        width: 40px;
+        height: 40px;
+        border: none;
         border-radius: 10px;
-        border: 1px solid rgba(0,0,0,0.06);
-        background: rgba(255,255,255,0.92);
-        font-size: 14px;
+        background: #ffffff;
+        color: #64748b;
+        cursor: pointer;
         display: flex;
         align-items: center;
         justify-content: center;
-        cursor: pointer;
-        color: #6b7280;
-        z-index: 6;
-        transition: transform 0.18s ease, box-shadow 0.18s ease;
-        backdrop-filter: blur(6px);
-        box-shadow: 0 6px 14px rgba(0,0,0,0.08);
+        transition: all 0.16s;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.06);
       }
 
-      .smj-close:hover { transform: translateY(-2px); box-shadow: 0 10px 26px rgba(0,0,0,0.12); color: #374151; }
+      .smj-close-btn:hover {
+        background: #f1f5f9;
+        color: #334155;
+        transform: scale(1.03);
+      }
 
-      .smj-img {
-        display: block;
+      .smj-close-btn:focus {
+        outline: 3px solid rgba(88,101,242,0.28);
+        outline-offset: 2px;
+      }
+
+      /* Main Content Area */
+      .smj-content {
+        padding: 0;
+        background: #ffffff;
+        position: relative; /* important for overlay button */
+      }
+
+      .smj-main-img {
         width: 100%;
         height: auto;
-        max-height: 400px;
+        display: block;
+        max-height: 420px;
         object-fit: cover;
-        transition: transform 0.24s cubic-bezier(0.2, 0.0, 0.2, 1);
       }
-      .smj-img:hover { transform: scale(1.01); }
 
-      .smj-imgbtns {
+      /* JOIN DISCORD overlay button (inside image bottom) */
+      .smj-join-btn {
         position: absolute;
         left: 50%;
         transform: translateX(-50%);
-        bottom: 14px;
-        display: flex;
-        gap: 10px;
-        z-index: 6;
-      }
-
-      .smj-imgbtn {
-        padding: 8px 14px;
+        bottom: 18px;
+        width: 160px; /* requested width */
+        padding: 12px 16px;
         border-radius: 999px;
         border: none;
-        font-size: 13px;
-        font-weight: 700;
-        cursor: pointer;
-        box-shadow: 0 8px 20px rgba(0,0,0,0.08);
-        transition: transform 0.18s ease, box-shadow 0.18s ease;
-        backdrop-filter: blur(6px);
-        display: flex;
+        display: inline-flex;
         align-items: center;
-        gap: 8px;
-        font-family: inherit;
-        letter-spacing: 0.01em;
+        justify-content: center;
+        gap: 10px;
+        font-weight: 700;
+        font-size: 14px;
+        cursor: pointer;
+        background: #5865f2; /* Discord purple */
+        color: #ffffff;
+        box-shadow: 0 12px 30px rgba(88,101,242,0.24), 0 0 28px rgba(88,101,242,0.14);
+        transition: transform 0.12s ease, box-shadow 0.12s ease, background 0.12s ease;
       }
 
-      .smj-imgbtn:hover { transform: translateY(-2px); box-shadow: 0 14px 34px rgba(0,0,0,0.12); }
-      .smj-imgbtn:active { transform: translateY(-1px); transition-duration: 0.08s; }
-
-      .smj-cancel { background: rgba(255,255,255,0.94); color: #6b7280; border: 1px solid rgba(0,0,0,0.06); }
-      .smj-cancel:hover { background: rgba(255,255,255,0.98); color: #374151; }
-
-      .smj-next { background: linear-gradient(135deg, #3b82f6, #1d4ed8); color: #ffffff; border: 1px solid rgba(59,130,246,0.22); }
-      .smj-next:hover { background: linear-gradient(135deg, #2563eb, #1e40af); box-shadow: 0 14px 34px rgba(59,130,246,0.14); }
-
-      @media (max-width: 520px) {
-        #smj-modal { padding: 12px; }
-        .smj-imgwrap { border-radius: 10px; }
-        .smj-badge { left: 10px; top: 10px; padding: 5px 10px; font-size: 10px; }
-        .smj-badge-logo { height: 16px; }
-        .smj-close { right: 10px; top: 8px; min-width: 32px; height: 32px; font-size: 13px; border-radius: 8px; }
-        .smj-imgbtn { padding: 8px 12px; font-size: 12px; border-radius: 999px; gap: 6px; }
-        .smj-imgbtns { bottom: 12px; gap: 8px; }
-        .smj-loading-content { padding: 14px 18px; border-radius: 10px; }
+      .smj-join-btn:hover {
+        background: #4752c4; /* darker purple on hover */
+        transform: translateX(-50%) translateY(-3px);
+        box-shadow: 0 18px 40px rgba(71,82,196,0.26), 0 0 36px rgba(71,82,196,0.16);
       }
 
-      .smj-close:focus, .smj-imgbtn:focus { outline: 3px solid rgba(59,130,246,0.35); outline-offset: 2px; }
+      .smj-join-btn svg { flex: 0 0 auto; }
+      .smj-join-text { letter-spacing: 0.6px; }
 
+      /* Footer decorative thin line */
+      .smj-footer {
+        height: 3px;
+        background: linear-gradient(90deg,#5865f2,#4752c4);
+        width: 100%;
+      }
+
+      /* Responsive Design */
+      @media (max-width: 600px) {
+        .smj-box { max-width: 95%; margin: 10px; }
+        .smj-modal-card { border-radius: 14px; }
+        .smj-header { padding: 12px 14px; }
+        .smj-logo { height: 32px; }
+        .smj-close-btn { width: 36px; height: 36px; }
+        .smj-main-img { max-height: 340px; }
+        .smj-join-btn { bottom: 14px; width: 150px; padding: 10px 14px; font-size: 13px; }
+      }
+
+      @media (max-width: 420px) {
+        .smj-join-btn { width: 130px; padding: 8px 12px; font-size: 12px; bottom: 12px; }
+      }
+
+      /* Dark mode support */
       @media (prefers-color-scheme: dark) {
-        .smj-loading-content { background: linear-gradient(135deg, #111827, #0b1220); border-color: rgba(255,255,255,0.02); }
-        .smj-loading-content p { color: #d1d5db; }
-        .smj-imgwrap { background: linear-gradient(135deg, #0b1220, #07101a); border-color: rgba(255,255,255,0.02); }
-        .smj-badge, .smj-close, .smj-cancel { background: rgba(17,24,39,0.9); color: #d1d5db; border-color: rgba(255,255,255,0.03); }
-        .smj-close:hover, .smj-cancel:hover { background: rgba(31,41,55,0.94); color: #f3f4f6; }
-        .smj-badge { color: #60a5fa; border-color: rgba(96,165,250,0.18); }
-        /* tetap paksa logo agar tetap normal di dark mode */
-        .smj-badge-logo { mix-blend-mode: normal !important; filter: none !important; -webkit-filter: none !important; background: transparent !important; }
+        .smj-modal-card { background: #0b1020; box-shadow: 0 30px 70px rgba(0,0,0,0.6); }
+        .smj-close-btn { background: #0f1724; color:#cbd5e1; }
+        .smj-footer { background: linear-gradient(90deg,#4752c4,#3b3fa6); }
+        .smj-loading-content { background:#111827; color:#f9fafb; }
+        .smj-loading-text { color:#e6eefc; }
       }
 
+      /* Reduced motion support */
       @media (prefers-reduced-motion: reduce) {
-        #smj-modal, #smj-loading, .smj-box, .smj-close, .smj-imgbtn, .smj-img { transition: none; }
-        .smj-spinner { animation: none; }
+        #smj-modal, #smj-loading, .smj-box, .smj-btn, .smj-close-btn { transition: none; }
+        .smj-loading-dot { animation: none; }
+      }
+
+      /* Print styles */
+      @media print {
+        #smj-modal, #smj-loading { display: none !important; }
       }
     `;
+
     const style = document.createElement("style");
     style.id = "smj-styles";
     style.textContent = css;
@@ -517,11 +492,7 @@
     },
     hasShown: () => hasShown,
     config: {
-      redirectUrl,
-      downloadUrl,
-      imageUrl,
-      showAfterMs: SHOW_AFTER_MS,
-      escClose: ENABLE_ESC_CLOSE
+      redirectUrl, downloadUrl, imageUrl, logoUrl, showAfterMs: SHOW_AFTER_MS, escClose: ENABLE_ESC_CLOSE
     }
   };
 })();
