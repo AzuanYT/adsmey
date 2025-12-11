@@ -1,4 +1,3 @@
-<script>
 document.addEventListener("DOMContentLoaded", function() {
 
   // Inject CSS
@@ -40,4 +39,3 @@ document.addEventListener("DOMContentLoaded", function() {
   });
 
 });
-</script>
