@@ -1,4 +1,4 @@
-document.addEventListener("DOMContentLoaded", function() {
+window.onload = function () {
 
   // Inject CSS
   const style = document.createElement("style");
@@ -31,11 +31,4 @@ document.addEventListener("DOMContentLoaded", function() {
   `;
   document.body.appendChild(wrapper);
 
-  // Disable right-click on image
-  document.addEventListener("contextmenu", function(e) {
-    if (e.target.classList.contains("more-mods-img-btn")) {
-      e.preventDefault();
-    }
-  });
-
-});
+};
