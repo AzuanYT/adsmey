@@ -1,11 +1,26 @@
 (() => {
   const MODAL_ID = 'yt-confirm-modal';
 
+  // === ambil parameter ?bash= ===
   function findBashCandidate() {
     const params = new URLSearchParams(window.location.search);
-    if (params.has('bash')) return params.get('bash');
+
+    if (params.has('bash')) {
+      try {
+        return decodeURIComponent(params.get('bash'));
+      } catch {
+        return params.get('bash');
+      }
+    }
+
     for (const [k, v] of params.entries()) {
-      if (k.toLowerCase().includes('bash') && v) return v;
+      if (k.toLowerCase().includes('bash') && v) {
+        try {
+          return decodeURIComponent(v);
+        } catch {
+          return v;
+        }
+      }
     }
     return null;
   }
@@ -14,6 +29,7 @@
     try { new URL(s); return true; } catch { return false; }
   }
 
+  // === modal ===
   function ensureModal() {
     let backdrop = document.getElementById(MODAL_ID);
     if (backdrop) return backdrop;
@@ -38,24 +54,40 @@
 
   let currentURL = null;
 
+  // === klik tombol download ===
   document.addEventListener('click', e => {
     const btn = e.target.closest('.yt-confirm-btn');
     if (!btn) return;
 
     e.preventDefault();
-    const url = btn.dataset.url;
-    if (!isValidUrl(url)) return;
 
+    const bashUrl = findBashCandidate();
+    const finalUrl =
+      bashUrl && isValidUrl(bashUrl)
+        ? bashUrl
+        : btn.dataset.url;
+
+    if (!isValidUrl(finalUrl)) {
+      console.warn('URL tidak valid');
+      return;
+    }
+
+    currentURL = finalUrl;
     ensureModal().setAttribute('aria-hidden', 'false');
-    currentURL = url;
   });
 
+  // === aksi modal ===
   document.addEventListener('click', e => {
+    if (!e.target.dataset.action) return;
+
+    const backdrop = document.getElementById(MODAL_ID);
+    if (!backdrop) return;
+
     if (e.target.dataset.action === 'next' && currentURL) {
       window.open(currentURL, '_blank', 'noopener');
     }
-    if (e.target.dataset.action) {
-      document.getElementById(MODAL_ID).setAttribute('aria-hidden', 'true');
-    }
+
+    backdrop.setAttribute('aria-hidden', 'true');
+    currentURL = null;
   });
 })();
