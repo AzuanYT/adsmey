@@ -1,0 +1,109 @@
+/* =========================
+   YT Confirm Modal Styles
+   Safe for Blogger (Scoped)
+   ========================= */
+
+.yt-confirm-btn {
+  font-family: inherit;
+  font-size: 0.85rem;
+  color: inherit;
+  background: transparent;
+  border: 1px solid rgba(0,0,0,.25);
+  padding: 0.45rem 0.7rem;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: background-color .15s ease, transform .08s ease, box-shadow .15s ease;
+}
+
+.yt-confirm-btn:hover {
+  background: rgba(0,0,0,.06);
+}
+
+.yt-confirm-btn:active {
+  transform: translateY(1px);
+}
+
+.yt-confirm-btn:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 2px rgba(0,0,0,.25);
+}
+
+/* Backdrop */
+.yt-modal-backdrop {
+  position: fixed;
+  inset: 0;
+  display: none;
+  place-items: center;
+  background: rgba(0,0,0,.35);
+  z-index: 2147483646;
+  padding: 1rem;
+}
+
+.yt-modal-backdrop[aria-hidden="false"] {
+  display: grid;
+}
+
+/* Modal Box */
+.yt-modal {
+  width: 100%;
+  max-width: 340px;
+  background: #fff;
+  color: #111;
+  border-radius: 18px;
+  padding: 1rem 1.1rem;
+  box-shadow: 0 10px 30px rgba(0,0,0,.25);
+  animation: yt-modal-pop .18s ease-out;
+}
+
+@keyframes yt-modal-pop {
+  from {
+    transform: scale(.96);
+    opacity: .6;
+  }
+  to {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+.yt-modal h3 {
+  margin: 0 0 .35rem;
+  font-size: 1rem;
+  font-weight: 600;
+}
+
+.yt-modal p {
+  margin: 0 0 .9rem;
+  font-size: .85rem;
+  color: #555;
+}
+
+/* Actions */
+.yt-actions {
+  display: flex;
+  gap: .5rem;
+  justify-content: flex-end;
+}
+
+.yt-btn {
+  font-family: inherit;
+  font-size: .85rem;
+  padding: .45rem .7rem;
+  border-radius: 10px;
+  border: 1px solid rgba(0,0,0,.25);
+  background: transparent;
+  cursor: pointer;
+  transition: background-color .15s ease, opacity .15s ease;
+}
+
+.yt-btn:hover {
+  background: rgba(0,0,0,.06);
+}
+
+.yt-btn-primary {
+  border-color: rgba(0,0,0,.4);
+}
+
+.yt-btn-ghost {
+  opacity: .85;
+}
