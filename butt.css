@@ -1,5 +1,6 @@
+
 /* =========================
-   Elegant Download Button
+   Elegant Download Button with Font Awesome
    Safe for Blogger
    ========================= */
 
@@ -33,6 +34,15 @@
     filter 0.15s ease;
 }
 
+/* Download Icon using Font Awesome */
+.yt-confirm-btn::before {
+  font-family: 'Font Awesome 5 Free';
+  font-weight: 900;
+  content: "\f019"; /* Download icon */
+  font-size: 1rem;
+  line-height: 1;
+}
+
 /* Hover */
 .yt-confirm-btn:hover {
   transform: translateY(-1px);
@@ -58,9 +68,20 @@
     0 6px 14px rgba(37, 99, 235, 0.35);
 }
 
-/* Optional icon */
-.yt-confirm-btn::before {
-  content: "⬇";
-  font-size: 1rem;
-  line-height: 1;
+/* Dark mode support */
+@media (prefers-color-scheme: dark) {
+  .yt-confirm-btn {
+    background: linear-gradient(135deg, #1e40af, #2563eb);
+  }
+}
+
+/* Optional: Add animation for better UX */
+@keyframes pulse {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.02); }
+  100% { transform: scale(1); }
+}
+
+.yt-confirm-btn:active {
+  animation: pulse 0.15s ease;
 }
