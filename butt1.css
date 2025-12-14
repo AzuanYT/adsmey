@@ -1,0 +1,211 @@
+/* =========================
+   YT Confirm Modal Styles
+   Final Custom Edition
+   Safe for Blogger (Scoped)
+   ========================= */
+
+/* --- Terapkan Font Montserrat ke Semua Elemen Relevan --- */
+.yt-confirm-btn, .yt-modal, .yt-modal h3, .yt-modal p, .yt-bbatal, .yt-nnext {
+  font-family: 'Montserrat', ui-sans-serif, system-ui, sans-serif;
+}
+
+/* --- Tombol Download dengan Warna Baru (#204ecf) --- */
+.yt-confirm-btn {
+  font-size: 0.85rem;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  
+  /* Gaya Outline dengan Warna Biru Baru */
+  background-color: transparent;
+  color: #204ecf; 
+  border: 2px solid #204ecf;
+  padding: 0.7rem 1.6rem;
+  border-radius: 50px;
+  
+  cursor: pointer;
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.6rem;
+  overflow: hidden;
+  z-index: 1;
+
+  transition: color 0.3s ease, border-color 0.3s ease, transform 0.2s ease;
+}
+
+/* Efek Isian dengan Gradien Berdasarkan Warna Baru */
+.yt-confirm-btn::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 0;
+  height: 100%;
+  background: linear-gradient(135deg, #204ecf, #1a3fb3); 
+  transition: width 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  z-index: -1;
+}
+
+/* Ikon Download */
+.yt-confirm-btn::after {
+  font-family: 'Font Awesome 5 Free';
+  font-weight: 900;
+  content: "\f019";
+  font-size: 1rem;
+  transition: transform 0.2s ease;
+}
+
+/* --- State Interaktif Tombol Download --- */
+.yt-confirm-btn:hover {
+  color: #ffffff;
+  border-color: #204ecf;
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px rgba(32, 78, 207, 0.35);
+}
+
+.yt-confirm-btn:hover::before {
+  width: 100%;
+}
+
+.yt-confirm-btn:hover::after {
+  transform: translateY(1px) rotate(-5deg);
+}
+
+.yt-confirm-btn:active {
+  transform: translateY(0);
+}
+
+.yt-confirm-btn:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(32, 78, 207, 0.4);
+}
+
+/* --- Backdrop Modal --- */
+.yt-modal-backdrop {
+  position: fixed;
+  inset: 0;
+  display: none;
+  place-items: center;
+  background: rgba(0, 0, 0, 0.4);
+  backdrop-filter: blur(10px);
+  z-index: 2147483646;
+  padding: 1.5rem; /* Padding default untuk desktop */
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+/* --- Perbaikan Tampilan Mobile --- */
+@media (max-width: 480px) {
+  .yt-modal-backdrop {
+    padding: 2rem; /* Tambah jarak di layar kecil agar tidak mepet */
+  }
+  .yt-modal {
+    border-radius: 24px; /* Sedikit kurangi kelengkungan di mobile */
+  }
+}
+
+.yt-modal-backdrop[aria-hidden="false"] {
+  display: grid;
+  opacity: 1;
+}
+
+/* --- Kotak Modal --- */
+.yt-modal {
+  width: 100%;
+  max-width: 420px;
+  
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(15px);
+  -webkit-backdrop-filter: blur(15px);
+  
+  border: 1px solid rgba(255, 255, 255, 0.6);
+  border-radius: 28px;
+  padding: 2rem;
+  box-shadow: 
+    0 30px 60px -12px rgba(0, 0, 0, 0.25),
+    inset 0 0 0 1px rgba(255, 255, 255, 0.1);
+
+  transform: translateY(30px);
+  opacity: 0;
+  transition: transform 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94), opacity 0.3s ease;
+}
+
+.yt-modal-backdrop[aria-hidden="false"] .yt-modal {
+  transform: translateY(0);
+  opacity: 1;
+}
+
+/* --- Konten Modal --- */
+.yt-modal h3 {
+  margin: 0 0 0.75rem;
+  font-size: 1.4rem;
+  font-weight: 700;
+  color: #1f2937;
+}
+
+.yt-modal p {
+  margin: 0 0 1.75rem;
+  font-size: 0.95rem;
+  font-weight: 400;
+  color: #4b5563;
+  line-height: 1.7;
+}
+
+/* --- Container untuk Tombol Aksi (.yt-actions) --- */
+.yt-actions {
+  display: flex;
+  gap: 0.75rem;
+  justify-content: flex-end;
+  margin-top: 0.5rem;
+}
+
+/* --- Tombol Aksi Spesifik --- */
+
+/* Tombol Batal (.yt-bbatal) */
+.yt-bbatal {
+  font-size: 0.9rem;
+  font-weight: 600;
+  padding: 0.65rem 1.25rem;
+  border-radius: 12px;
+  border: none;
+  cursor: pointer;
+  background-color: rgba(31, 41, 55, 0.05);
+  color: #4b5563;
+  transition: all 0.2s ease;
+}
+
+.yt-bbatal:hover {
+  background-color: rgba(31, 41, 55, 0.1);
+  transform: translateY(-1px);
+}
+
+/* Tombol Next (.yt-nnext) */
+.yt-nnext {
+  font-size: 0.9rem;
+  font-weight: 600;
+  padding: 0.65rem 1.25rem;
+  border-radius: 12px;
+  border: none;
+  cursor: pointer;
+  
+  /* Gunakan warna yang sama dengan tombol utama */
+  background: linear-gradient(135deg, #204ecf, #1a3fb3);
+  color: #ffffff;
+  box-shadow: 0 4px 12px rgba(32, 78, 207, 0.3);
+  
+  transition: all 0.2s ease;
+}
+
+.yt-nnext:hover {
+  background: linear-gradient(135deg, #1a3fb3, #142a8a);
+  transform: translateY(-1px);
+  box-shadow: 0 6px 16px rgba(32, 78, 207, 0.4);
+}
+
+/* Focus state untuk kedua tombol */
+.yt-bbatal:focus-visible, .yt-nnext:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 2px #204ecf;
+   }
