@@ -27,8 +27,8 @@
         <h3>Menuju tautan eksternal</h3>
         <p>Kamu akan meninggalkan situs ini. Lanjutkan?</p>
         <div class="yt-actions">
-          <button data-action="cancel">Batal</button>
-          <button data-action="next">Lanjut</button>
+          <button class="yt-bbatal" data-action="cancel">Batal</button>
+          <button class="yt-nnext" data-action="next">Lanjut</button>
         </div>
       </div>
     `;
